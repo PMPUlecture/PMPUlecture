@@ -1,11 +1,17 @@
 from django.db import models
 
+
 # Create your models here.
 
 
 class Programme(models.Model):
+    class TypeOfDegrees(models.TextChoices):
+        BACHELOR = ("bachelor", "Бакалавриат")
+        MASTER = ("master", "Магистратура")
+
     name = models.CharField(max_length=100)
     img_url = models.URLField(max_length=256)
+    degree = models.CharField(max_length=16, choices=TypeOfDegrees.choices)
 
     def __str__(self):
         return self.name
@@ -65,12 +71,12 @@ class Materials(models.Model):
         ABSTRACT = ("abstract", "конспект")
         QUESTIONS = ("questions", "вопросы")
         TEST = ("test", "контрльная")
+
     name = models.CharField(max_length=256, null=True)
     type = models.CharField(max_length=16, choices=TypeOfMaterial.choices)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     lecturer = models.ForeignKey(Lecturer, on_delete=models.SET_NULL, null=True)
     link = models.URLField(max_length=256, null=True)
-
 
     def __str__(self):
         return self.name

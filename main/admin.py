@@ -29,7 +29,9 @@ class LecturerAdmin(admin.ModelAdmin):
     inlines = [MaterialsInline]
 
 
-admin.site.register(Programme)
+@admin.register(Programme)
+class PregrammeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'degree']
 
 @admin.register(Materials)
 class MaterialAdmin(admin.ModelAdmin):
