@@ -39,6 +39,8 @@ class Subject(models.Model):
 class Lecturer(models.Model):
     name = models.CharField(max_length=100)
     subject = models.ManyToManyField(Subject, null=True)
+    apmath_url = models.URLField(max_length=256, null=True)
+    vk_discuss_url = models.URLField(max_length=256, null=True)
     photo_url = models.URLField(max_length=256, null=True)
 
     def as_dict(self, *args, apmath=False, photo=False, vk_discuss=False):
