@@ -9,7 +9,7 @@ class Programme(models.Model):
         BACHELOR = ("bachelor", "Бакалавриат")
         MASTER = ("master", "Магистратура")
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     img_url = models.URLField(max_length=256)
     degree = models.CharField(max_length=16, choices=TypeOfDegrees.choices)
 
