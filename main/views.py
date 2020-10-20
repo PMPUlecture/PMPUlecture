@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
-from .models import Lecturer, Subject, Programme
-
+from .models import Lecturer, Subject, Programme, Materials
 
 # Create your views here.
 
@@ -17,6 +16,7 @@ def get_lecturer(req):
     return JsonResponse({'lecturers': [obj.as_dict() for obj in lecturers]}, safe=False)
 
 
+<<<<<<< HEAD
 def set_struct(req):
     if req.GET.get('programme'):
         programme = Programme.objects.filter(name=req.GET.get('programme').rstrip('/')).first()
@@ -43,3 +43,4 @@ def get_programmes(req):
     resp = JsonResponse({'programmes': {'bachelor': [obj.as_dict() for obj in progrb], 'master': [obj.as_dict() for obj in progrm]}})
     resp.setdefault('Access-Control-Allow-Origin', '*')
     return resp
+
