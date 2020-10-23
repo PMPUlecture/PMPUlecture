@@ -29,8 +29,10 @@ class LecturerSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['materials'] = [MaterialSerializer(obj).data for obj in
-                            Materials.objects.filter(lecturer=instance)]
+        ret['materials'] = dict()
+        for item in Materials.TypeOfMaterial.choices: # tuple : ('for_backend', "For frontend")
+            ret['materials'][item[0]] = \
+                [MaterialSerializer(obj).data for obj in Materials.objects.filter(lecturer=instance, type=item[0])]
         return ret
 
 
