@@ -7,4 +7,5 @@ urlpatterns = [
 #     url(r'^subjects/$', views.SubjectView.as_view()),
     path('lecturer/', views.DetailLecturer.as_view()),
     path('struct/', views.ListUsers.as_view()),
+    path('auth/', views.UserCreate.as_view()),
     ]

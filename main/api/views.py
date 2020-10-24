@@ -1,9 +1,9 @@
 from rest_framework import generics, views
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 
 from ..models import Programme, Subject, Lecturer
-from .serializers import ProgrammeSerializer, SubjectSerializer, LecturerSerializer, LecturerStructSerializer
+from .serializers import ProgrammeSerializer, SubjectSerializer, LecturerSerializer, LecturerStructSerializer, UserSerializer
 
 
 class ProgListView(generics.ListAPIView):
@@ -42,3 +42,8 @@ class ListUsers(views.APIView):
             res = Response({'error': "No Such Programme"})
         res.setdefault('Access-Control-Allow-Origin', '*')
         return res
+
+
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
