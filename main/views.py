@@ -38,8 +38,11 @@ def set_struct(req):
 
 
 def get_programmes(req):
-    progrb = Programme.objects.filter(degree='bachelor')
-    progrm = Programme.objects.filter(degree='master')
-    resp = JsonResponse({'programmes': {'bachelor': [obj.as_dict() for obj in progrb], 'master': [obj.as_dict() for obj in progrm]}})
+    queryset = Programme.objects.all()
+    response_raw = dict()
+    for degree in Programme.TypeOfDegrees.choices:
+        response_raw[degree[0]] = [obj.as_dict() for obj in queryset.filter(degree=degree[0])]
+    # resp = JsonResponse({'programmes': {'bachelor': [obj.as_dict() for obj in progrb], 'master': [obj.as_dict() for obj in progrm]}})
+    resp = JsonResponse(response_raw)
     resp.setdefault('Access-Control-Allow-Origin', '*')
     return resp
