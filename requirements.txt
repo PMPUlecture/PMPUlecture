@@ -3,12 +3,9 @@ cffi==1.14.2
 dj-database-url==0.5.0
 Django==3.1.2
 django-heroku==0.3.1
-djangorestframework==3.12.1
 greenlet==0.4.13
 gunicorn==20.0.4
-pkg-resources==0.0.0
 psycopg2==2.8.6
-pycparser==2.20
 pytz==2020.1
 sqlparse==0.4.0
 whitenoise==5.2.0
