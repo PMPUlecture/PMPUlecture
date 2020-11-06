@@ -3,9 +3,9 @@
     <!-- Image and text -->
     <div class="container-fluid">
       <div class="row vh-100">
-        <div class="col-3">
+        <div class="col-3">  <!-- левая колонка со ссылками, не меняется -->
 
-          <div class="card h-100">
+          <div class="card h-75 sticky-top">
             <div class="card-body d-flex flex-column justify-content-between">
 
               <div class="list-group list-group-flush">
@@ -23,12 +23,13 @@
           </div>
 
         </div>
-        <div class="col">
+        <div class="col"> <!-- правая колонка, меняется -->
 
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="card-title">Название карточки</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+              <Programmes />
+
             </div>
           </div>
 
@@ -36,20 +37,22 @@
       </div>
     </div>
 
-
 </template>
 
 <script>
+import Programmes from '../components/Programmes';
 
 export default {
-  name: 'App',
+  //name: 'App',
   components: {
+    Programmes,
   },
   data() {
+
   },
-  methods: {
-
-  }
 }
-
 </script>
+
+<style>
+
+</style>
