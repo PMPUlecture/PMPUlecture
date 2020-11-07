@@ -4,36 +4,16 @@
       <p class="degree-text">Бакалавриат</p>
     </div>
 
-    <button type="button" class="btn btn-secondary btn-lg btn-block">
-      <div class="card-body">
-        <div class="card bg-dark text-white">
-          <img :src=this.progList.bachelor[0].img_url class="card-img">
-          <!-- <p> {{this.progList.bachelor[0].img_url }} </p> -->
-          <div class="card-img-overlay">
+    <ProgrammeCard v-for="programme in progList.bachelor"
+                    v-bind:programme="programme"/>
 
-            <p class="program-text1">
-              {{ this.progList.bachelor[0].name }}
-            </p>
+    <div class="card-header">
+      <p class="degree-text">Магистратура</p>
+    </div>
 
-          </div>
-        </div>
-      </div>
-    </button>
+    <ProgrammeCard v-for="programme in progList.master"
+                   v-bind:programme="programme"/>
 
-    <button type="button" class="btn btn-secondary btn-lg btn-block">
-      <div class="card-body">
-        <div class="card bg-dark text-white">
-          <img :src=this.progList.bachelor[1].img_url class="card-img">
-          <div class="card-img-overlay">
-
-            <p class="program-text2">
-              {{ this.progList.bachelor[1].name }}
-            </p>
-
-          </div>
-        </div>
-      </div>
-    </button>
 
   </div>
 
@@ -42,10 +22,12 @@
 <script>
 
 import axios from "axios";
+import ProgrammeCard from "./ProgrammeCard";
 
 export default {
   //name: 'App',
   components: {
+    ProgrammeCard,
   },
   data() {
     return {
