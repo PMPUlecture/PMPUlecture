@@ -28,7 +28,7 @@
           <div class="card h-100">
             <div class="card-body">
 
-              <Programmes />
+              <Login />
 
             </div>
           </div>
@@ -40,12 +40,12 @@
 </template>
 
 <script>
-import Programmes from '../components/Programmes';
+import Login from '../components/Log0in.vue';
 
 export default {
   //name: 'App',
   components: {
-    Programmes,
+    Login,
   },
   data() {
 
