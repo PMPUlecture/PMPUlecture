@@ -40,18 +40,26 @@ class Lecturer(models.Model):
     vk_discuss_url = models.URLField(max_length=256, null=True)
     photo_url = models.URLField(max_length=256, null=True)
 
-    def as_dict(self, *args, apmath=False, photo=False, vk_discuss=False):
+    def as_dict(self, *args, subjects: bool = False, apmath: bool = False, photo: bool = False,
+                vk_discuss: bool = False,
+                materials: bool = False):
         dicte = {
             'id': self.id,
             'name': self.name,
-            'subjects': [item.as_dict() for item in self.subject.all()]
         }
+        if subjects:
+            dicte['subjects'] = [item.as_dict() for item in self.subject.all()]
         if apmath:
             dicte['apmath'] = self.apmath_url
         if photo:
             dicte['photo'] = self.photo_url
         if vk_discuss:
             dicte['vk_discuss_url'] = self.vk_discuss_url
+        if materials:
+            all_materials = Materials.objects.filter(lecturer=self)
+            dicte['materials'] = [
+                {type_of_material[0]: [material.as_dict() for material in all_materials.filter(type=type_of_material[0])]
+                 for type_of_material in Materials.TypeOfMaterial.choices}]
         return dicte
 
     def __str__(self):
@@ -61,7 +69,6 @@ class Lecturer(models.Model):
         return ', '.join([subjects.__str__() for subjects in self.subject.all()[:3]])
 
     display_subjects.short_description = 'Subjects'
-
 
 class Materials(models.Model):
     class TypeOfMaterial(models.TextChoices):
@@ -82,8 +89,6 @@ class Materials(models.Model):
     def as_dict(self):
         return {
             'name': self.name,
-            'type': self.type,
-            'subject': self.subject,
-            'lecturer': self.lecturer,
-            'url': self.link
+            'url': self.link,
+            'subject': self.subject.name
         }

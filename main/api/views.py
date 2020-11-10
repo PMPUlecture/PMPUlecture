@@ -3,10 +3,10 @@ from django.core import serializers
 from ..models import Lecturer, Subject, Programme
 
 
-def get_lecturer(req):
-    lecturers = Lecturer.objects.all()
+def get_lecturer(req, id):
+    lecturer = Lecturer.objects.get(pk=id)
 
-    return JsonResponse({'lecturers': [obj.as_dict() for obj in lecturers]}, safe=False)
+    return JsonResponse({'lecturers': lecturer.as_dict(materials=True)}, safe=False)
 
 
 def set_struct(req):
