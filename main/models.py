@@ -57,9 +57,14 @@ class Lecturer(models.Model):
             dicte['vk_discuss_url'] = self.vk_discuss_url
         if materials:
             all_materials = Materials.objects.filter(lecturer=self)
-            dicte['materials'] = [
+            dicte['materials'] = list()
+            for subject in Subject.objects.filter(lecturer=self):
+                dicte['materials'].append(
+                    {subject.name: [
                 {type_of_material[0]: [material.as_dict() for material in all_materials.filter(type=type_of_material[0])]
                  for type_of_material in Materials.TypeOfMaterial.choices}]
+                    }
+                )
         return dicte
 
     def __str__(self):
@@ -90,5 +95,4 @@ class Materials(models.Model):
         return {
             'name': self.name,
             'url': self.link,
-            'subject': self.subject.name
         }
