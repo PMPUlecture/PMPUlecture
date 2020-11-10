@@ -68,6 +68,7 @@ class Materials(models.Model):
         ABSTRACT = ("abstract", "конспект")
         QUESTIONS = ("questions", "вопросы")
         TEST = ("test", "контрльная")
+        OTHER = ("other", "разное")
 
     name = models.CharField(max_length=256, null=True)
     type = models.CharField(max_length=16, choices=TypeOfMaterial.choices)
