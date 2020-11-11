@@ -61,3 +61,33 @@ _params_: `programme` - название программы
   }
 ]
 ```
+
+* `lecturer/<int:id>` - вывод информации по лектору по ID
+
+Вывод:
+```JSON
+{
+  "lecturers": {
+    "id": 1,
+    "name": "Платонов",
+    "materials": [
+      {
+        "Матан": [
+          {
+            "abstract": [
+              {
+                "name": "n",
+                "url": "http://sfds.com"
+              }
+            ],
+            "questions": [],
+            "test": [],
+            "other": []
+          }
+        ]
+      },
+      .....
+    ]
+  }
+}
+```
