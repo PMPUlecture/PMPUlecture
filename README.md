@@ -67,7 +67,6 @@ _params_: `programme` - название программы
 Вывод:
 ```JSON
 {
-  "lecturers": {
     "id": 1,
     "name": "Платонов",
     "materials": [
@@ -88,6 +87,5 @@ _params_: `programme` - название программы
       },
       .....
     ]
-  }
 }
 ```

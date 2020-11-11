@@ -6,7 +6,7 @@ from ..models import Lecturer, Subject, Programme
 def get_lecturer(req, id):
     lecturer = Lecturer.objects.get(pk=id)
 
-    return JsonResponse({'lecturers': lecturer.as_dict(materials=True)}, safe=False)
+    return JsonResponse(lecturer.as_dict(materials=True), safe=False)
 
 
 def set_struct(req):
