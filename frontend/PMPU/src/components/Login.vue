@@ -1,15 +1,23 @@
 <template>
-  <form action="" method="post">
-    <input type="hidden" name="csrfmiddlewaretoken" :value=getCSRF>
-    <h4 class="text-monospace">Enter the username:</h4>
-    <input class="form-control mr-sm-2" type="email" name="email" size=50>
-    <br>
-    <h4 class="text-monospace">Enter the password:</h4>
-    <input class="form-control mr-sm-2" type="password" name="password" size=50>
-    <br>
-    <br>
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log in</button>
-  </form>
+  <div style="text-align: left">
+    <form action="/account/login/" method="post">
+      <div class="form-group row">
+        <input type="hidden" name="csrfmiddlewaretoken" :value=getCSRF>
+        <label class="col-sm-2 col-form-label">Email:</label>
+        <div class="col-sm-7">
+          <input type="email" class="form-control" id="InputEmail" name="email" aria-describedby="emailHelp">
+          <small id="emailHelp" class="form-text text-muted">Используйте ваш st******@student.spbu.ru</small>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2">Пароль:</label>
+        <div class="col-sm-7">
+        <input type="password" class="form-control" name="password" id="InputPassword">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
 </template>
 
 <script>

@@ -8,7 +8,11 @@
     <title>pmpu</title>
   </head>
   <body style="background-color: darkgrey">
+      {% if user.is_authenticated %}
+        <p>{{ user.email }}</p>
+    {% endif %}
     <div id="app"></div>
+
     <!-- built files will be auto injected -->
 
     <!-- bootstrap init -->
