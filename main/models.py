@@ -75,6 +75,7 @@ class Lecturer(models.Model):
 
     display_subjects.short_description = 'Subjects'
 
+
 class Materials(models.Model):
     class TypeOfMaterial(models.TextChoices):
         ABSTRACT = ("abstract", "конспект")
