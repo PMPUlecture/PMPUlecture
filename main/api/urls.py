@@ -8,4 +8,5 @@ urlpatterns = [
 	path("struct/", views.DetailProgramme.as_view()),
 	path("programmes/", views.Programmes.as_view()),
 	path("programmes/<int:id>", views.DetailProgramme2.as_view()),
+	path("user/", views.UserDetail.as_view())
 ]
