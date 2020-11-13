@@ -14,7 +14,14 @@ export default new Router({
     },
     {
       path: '/login',
-      component: Login
+      component: Login,
+    },
+    {
+      path: '/account/logout',
+      beforeEnter(to, from, next) {
+        // Put the full page url including the protocol http(s) below
+        window.location = "http://127.0.0.1:8000/account/logout/"
+      }
     }
   ]
 })

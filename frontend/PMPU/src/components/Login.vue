@@ -1,6 +1,9 @@
 <template>
   <div style="text-align: left">
-    <form action="/account/login/" method="post">
+    <div class="alert alert-danger" role="alert" v-if="$route.query.error === '1'">
+      Неправильный логин или пароль!
+    </div>
+    <form action="http://127.0.0.1:8000/account/login/" method="post">
       <div class="form-group row">
         <input type="hidden" name="csrfmiddlewaretoken" :value=getCSRF>
         <label class="col-sm-2 col-form-label">Email:</label>
@@ -23,16 +26,15 @@
 <script>
 export default {
 name: "Login",
-  computed:{
-  getCSRF: function (){
-    console.log(this.$cookies)
-    if (this.$cookies.isKey('csrftoken')){
-      return this.$cookies.get('csrftoken')
-   }
-    else{
-      return 'no token'
+  computed: {
+    getCSRF: function () {
+      console.log(this.$cookies)
+      if (this.$cookies.isKey('csrftoken')) {
+        return this.$cookies.get('csrftoken')
+      } else {
+        return 'no token'
+      }
     }
-  }
   }
 }
 </script>
