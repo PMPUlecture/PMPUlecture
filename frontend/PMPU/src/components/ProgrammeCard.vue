@@ -1,27 +1,30 @@
 <template>
-  <button type="button" class="btn btn-secondary btn-lg btn-block">
-    <div class="card-body">
-      <div class="card bg-dark text-white">
-          <img :alt=programme.name :src=programme.img_url class="card-img images" style="max-height: 250px; object-fit: cover;">
-        <!-- <p> {{this.progList.bachelor[0].img_url }} </p> -->
-        <div class="card-img-overlay">
 
-          <p class="program-text1">
-            {{ programme.name }}
-          </p>
-
-        </div>
+    <div class="shadow card mb-3">
+      <img :src="programme.img_url" class="card-img imgback" alt="...">
+      <div class="card-img-overlay d-flex justify-content-end flex-column m-md-3">
+        <router-link :to="'programme/'+programme.id" class="stretched-link text-white"><h2 class="display program-text1 text-white">{{programme.name}}</h2></router-link>
       </div>
     </div>
-  </button>
+
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: {
     programme: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    OnClick() {
+      console.log('clicked')
+      const progName = this.programme.name
+      console.log(progName)
+      this.$emit('show-prog',progName)
     }
   },
   name: "ProgrammeCard"
@@ -30,4 +33,22 @@ export default {
 
 <style scoped>
 
+a:hover{
+  text-decoration: none; /* Отменяем подчеркивание у ссылки */
+}
+
+
+.imgback{
+  max-height: 250px;
+  object-fit: cover;
+}
+
+.program-text1 {
+  text-shadow: #000 3px 3px 5px;
+
+}
+
+.shadow {
+  box-shadow: 0 0 18px #000;
+}
 </style>

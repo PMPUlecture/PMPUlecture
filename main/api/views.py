@@ -27,6 +27,21 @@ class DetailLecturer(View):
         return resp
 
 
+class UserDetail(View):
+    def get(self, request):
+        response = {"is_authenticated": request.user.is_authenticated}
+        if response["is_authenticated"]:
+            response.update(email=request.user.email,
+                            first_name = request.user.first_name,
+                            last_name =request.user.last_name)
+
+        resp = JsonResponse(response)
+        resp.setdefault('Access-Control-Allow-Origin', '*')
+        return resp
+
+
+
+
 class DetailMaterial(View):
     def post(self, request):
         data = json.loads(request.body)

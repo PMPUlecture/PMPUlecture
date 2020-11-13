@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "axios": "^0.21.0",
-    "vue": "^2.5.11"
+    "vue": "^2.5.11",
+    "vue-cookies": "^1.7.4",
+    "vue-router": "^3.4.9"
   },
   "browserslist": [
     "> 1%",
