@@ -6,5 +6,6 @@ urlpatterns = [
 	path("lecturer/", views.DetailLecturer.as_view()),
 	path("material/", views.DetailMaterial.as_view()),
 	path("struct/", views.DetailProgramme.as_view()),
-	path("programmes/", views.Programmes.as_view())
+	path("programmes/", views.Programmes.as_view()),
+	path("programmes/<int:id>", views.DetailProgramme2.as_view()),
 ]

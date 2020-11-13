@@ -14,7 +14,7 @@ class Programme(models.Model):
         return self.name
 
     def as_dict(self):
-        return {'name': self.name, 'img_url': self.img_url}
+        return {'id': self.pk, 'name': self.name, 'img_url': self.img_url}
 
 
 class Subject(models.Model):
