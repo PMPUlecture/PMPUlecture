@@ -100,10 +100,10 @@ class DetailProgramme2(View):
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
 
-        resp = JsonResponse([{'term': term, 'subjects':
+        resp = JsonResponse({"name": programme.name, "terms": [{'term': term, 'subjects':
             [{'id': subject.id, 'name': subject.name, 'lecturers':
                 [{'id': lecturer.id, 'name': lecturer.name} for lecturer in Lecturer.objects.filter(subject=subject)]}
-             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)], safe=False)
+             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)]}, safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
