@@ -1,24 +1,22 @@
 <template>
-  <div class="card text-white bg-secondary mb-3">
-    <div class="card-header">
-      <p class="degree-text">Бакалавриат</p>
-    </div>
+  <div>
+      <h3 class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Бакалавриат</span></h3>
+
+      <div class="w-auto  p-1"></div>
 
     <ProgrammeCard v-for="programme in progList.bachelor"
                     v-bind:programme="programme"
                    @show-prog="changeView"
     />   <!-- v-bind:programme="programme" - передача параметров -->
 
-    <div class="card-header">
-      <p class="degree-text">Магистратура</p>
-    </div>
+    <h3 class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Магистратура</span></h3>
 
     <ProgrammeCard v-for="programme in progList.master"
                    v-bind:programme="programme"
                    @show-prog="changeView"
     />
-
   </div>
+
 
 </template>
 
@@ -61,33 +59,6 @@ export default {
 </script>
 
 <style>
-.program-text1 {
-  position: relative;
-  top: 30%;
-  font-size: 500%;
-  font-family: fantasy;
-  text-shadow: red 2px 3px 30px;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: red;
-}
-.program-text2 {
-  position: relative;
-  top: 30%;
-  font-size: 500%;
-  font-family: fantasy;
-  text-shadow: blue 2px 3px 30px;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: blue;
-}
-.degree-text {
-  position: relative;
-  top: 50%;
-  font-size: 300%;
-  font-family: fantasy;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
-  text-shadow: black 0 0 20px;;
-}
 
 </style>
 

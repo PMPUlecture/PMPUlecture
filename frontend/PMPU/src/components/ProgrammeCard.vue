@@ -1,9 +1,9 @@
 <template>
 
-    <div class="card mb-3" @click.prevent="OnClick">
-      <img :src=programme.img_url class="card-img imgback" alt="...">
-      <div class="card-img-overlay d-flex justify-content-end flex-column">
-        <a href="#" class="stretched-link text-white"><h2 class="display program-text text-white">{{programme.name}}</h2></a>
+    <div class="shadow card mb-3" @click.prevent="OnClick">
+      <img :src="programme.img_url" class="card-img imgback" alt="...">
+      <div class="card-img-overlay d-flex justify-content-end flex-column m-md-3">
+        <a href="#" class="stretched-link text-white"><h2 class="display program-text1 text-white">{{programme.name}}</h2></a>
       </div>
     </div>
 
@@ -32,21 +32,23 @@ export default {
 </script>
 
 <style scoped>
+
+a:hover{
+  text-decoration: none; /* Отменяем подчеркивание у ссылки */
+}
+
+
 .imgback{
   max-height: 250px;
   object-fit: cover;
 }
 
-.program-text {
+.program-text1 {
   text-shadow: #000 3px 3px 5px;
 
-  //position: relative;
-  font-size: 300%;
-  //right: 40%;
-  //top: 100%;
-  //font-family: fantasy;
-  //-webkit-text-stroke-width: 2px;
-  //-webkit-text-stroke-color: black;
-  //text-shadow: black 0 0 20px;;
+}
+
+.shadow {
+  box-shadow: 0 0 18px #000;
 }
 </style>
