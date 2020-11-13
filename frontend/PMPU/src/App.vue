@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 class="header-text">{{ msg }}</h1>
+    <h1 class="display-3 header-text">{{ msg }}</h1>
     <Home/>
 
   </div>
@@ -52,13 +52,14 @@ a {
 }
 
 .header-text {
-  position: relative;
+  /*position: relative;
   top: 50%;
   font-size: 700%;
   font-family: fantasy;
   color: teal;
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: black;
-  text-shadow: black 0 0 20px;;
+  text-shadow: black 0 0 20px;;*/
+  color: #3087de;;
 }
 </style>

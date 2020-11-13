@@ -28,7 +28,14 @@
           <div class="card h-100">
             <div class="card-body">
 
-              <Programmes />
+              <Programmes v-if="state == 'list'"
+                          @show-prog="changeView"
+              />
+              <ProgramInfo v-if="state == 'info'"
+                           :progName="this.progName"
+              />
+              <!-- @show-list="changeView2" -->
+
 
             </div>
           </div>
@@ -41,15 +48,28 @@
 
 <script>
 import Programmes from '../components/Programmes';
+import ProgramInfo from '../components/ProgramInfo';
 
 export default {
   //name: 'App',
   components: {
     Programmes,
+    ProgramInfo
   },
   data() {
-
+    return {
+      state: 'list',
+      progName: null,
+    }
   },
+  methods: {
+    changeView(progName){
+      console.log('changeView1()')
+      console.log(progName)
+      this.state = 'info'
+      this.progName = progName
+    }
+  }
 }
 </script>
 

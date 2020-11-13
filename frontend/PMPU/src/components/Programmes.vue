@@ -5,15 +5,18 @@
     </div>
 
     <ProgrammeCard v-for="programme in progList.bachelor"
-                    v-bind:programme="programme"/>
+                    v-bind:programme="programme"
+                   @show-prog="changeView"
+    />   <!-- v-bind:programme="programme" - передача параметров -->
 
     <div class="card-header">
       <p class="degree-text">Магистратура</p>
     </div>
 
     <ProgrammeCard v-for="programme in progList.master"
-                   v-bind:programme="programme"/>
-
+                   v-bind:programme="programme"
+                   @show-prog="changeView"
+    />
 
   </div>
 
@@ -48,14 +51,9 @@ export default {
           console.log(error);
         })
     },
-    getProgInfo(progName) {
-      axios.get('https://pmpulecture.herokuapp.com/api/struct/?programme='+progName)
-        .then(response => {
-          this.progInfo = response.data
-        })
-        .catch(error => {
-          console.log(error);
-        })
+    changeView(progName) {
+      console.log('changeView()')
+      this.$emit('show-prog',progName)
     }
   }
 }
@@ -90,5 +88,6 @@ export default {
   -webkit-text-stroke-color: black;
   text-shadow: black 0 0 20px;;
 }
+
 </style>
 
