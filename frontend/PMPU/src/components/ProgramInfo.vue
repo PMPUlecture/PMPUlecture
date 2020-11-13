@@ -1,12 +1,15 @@
 <template>
+
   <div>
-    <p class="progname">{{progName}}</p>
+    <p class="progname">{{ progInfo.name }}</p>
+    <div class="accordion" id="programme">
+        <Term v-for="term in progInfo.terms"
+              :termInfo="term"
+        />
+    </div>
+    </div>
 
-    <Term v-for="term in progInfo"
-          :termInfo="term"
-    />
 
-  </div>
 </template>
 
 <script>
@@ -15,12 +18,9 @@ import axios from "axios";
 import Term from '../components/program/Term';
 
 export default {
-  props: {
-    progName: {
-      type: String,
-      required: true
-    }
-  },
+  name: "ProgramInfo",
+  props: ['progID',]
+  ,
   components: {
     Term,
   },
@@ -30,18 +30,19 @@ export default {
     }
   },
   created() {
-    this.getProgInfo(this.progName)
-    console.log('progName: '+this.progName)
+    this.getProgInfo(this.progID)
   },
   methods: {
-    getProgInfo(progName) {
-      axios.get('https://pmpulecture.herokuapp.com/api/struct/?programme='+progName)
+    getProgInfo(progID) {
+      axios.get('/api/programmes/'+progID)
         .then(response => {
           this.progInfo = response.data
+          console.log(this.progInfo)
         })
         .catch(error => {
           console.log(error);
         })
+      this.progInfo = "nonnono";
     },
   }
 }
@@ -50,8 +51,6 @@ export default {
 
 <style>
 .progname {
-  //text-shadow: #000 3px 3px 5px;
-
   position: relative;
   font-size: 250%;
   color: cornflowerblue;

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <a href="#"><h4 class="lecturer-text">{{lecturerInfo.name}}</h4></a>
+  <a href="#" class="list-group-item-success list-group-item list-group-item-action stretched-link">{{lecturerInfo.name}}</a>
 </div>
 </template>
 

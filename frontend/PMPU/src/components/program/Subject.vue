@@ -1,31 +1,21 @@
 <template>
-  <div>
-
-    <div class="accordion" id="accordionExample1">
-      <div class="card">
-        <div class="card-header bg-secondary" id="headingOne">
-          <h5 class="mb-0">
-            <button class="btn btn-link collapse-header" type="button" data-toggle="collapse" :data-target="subjectidsharp" aria-expanded="true" >
-              {{subjectInfo.name}}
-            </button>
-          </h5>
-        </div>
-
-        <div :id="subjectid" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample1">
-          <div class="card-body">
-
-            <Lecturer v-for="lecturer in subjectInfo.lecturers"
-                     :lecturerInfo="lecturer"
-            />
-
-          </div>
-        </div>
-      </div>
-
-
+  <div class="card bg-light">
+    <div class="card-header">
+      <a class="stretched-link text-primary" data-toggle="collapse" :href="'#collapseS'+this.subjectInfo.id" :aria-controls="'collapseS'+this.subjectInfo.id">
+        {{ this.subjectInfo.name }}
+      </a>
     </div>
 
+    <div :id="'collapseS'+this.subjectInfo.id" class="collapse" :data-parent="'#collapseTerm'+this.termInfo">
+        <div class="list-group card-body pl-4">
+          <Lecturer v-for="lecturer in this.subjectInfo.lecturers"
+                    :lecturerInfo="lecturer"
+          />
+
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -38,6 +28,9 @@ export default {
     subjectInfo: {
       type: Object,
       required: true
+    },
+    termInfo:{
+
     }
   },
   components: {
@@ -45,8 +38,7 @@ export default {
   },
   data() {
     return {
-      subjectidsharp: '#subject'+this.subjectInfo.id,
-      subjectid: 'subject'+this.subjectInfo.id,
+
     }
   }
 }

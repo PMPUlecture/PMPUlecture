@@ -5,7 +5,7 @@
     <div class="container-fluid min-vh-100">
       <div class="row bg-primary text-white mb-5">
         <div class="col m-2">
-          <h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1>
+          <a class="stretched-link text-white nostroke" href="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></a>
         </div>
       </div>
       <div class="row">
@@ -15,9 +15,9 @@
               <div class="card">
                 <div class="card-body">
                 <div class="list-group list-group-flush">
-                  <a class="list-group-item list-group-item-action" href="https://vk.com/pmpu_news">ПМ-ПУ СМИ</a>
-                  <a class="list-group-item list-group-item-action" href="https://vk.com/sspmpu">Студсовет ПМ-ПУ</a>
-                  <a class="list-group-item list-group-item-action" href="#">Студсовет2 ПМ-ПУ</a>
+                  <a class="list-group-item list-group-item-action" target="blank"  href="https://vk.com/pmpu_news">ПМ-ПУ СМИ</a>
+                  <a class="list-group-item list-group-item-action" target="blank"href="https://vk.com/sspmpu">Студсовет ПМ-ПУ</a>
+                  <a class="list-group-item list-group-item-action" target="blank"href="#">Студсовет2 ПМ-ПУ</a>
                 </div>
                 </div>
               </div>
@@ -48,9 +48,9 @@
                 <div class="card-body">
                   <div class="list-group list-group-flush ">
                     <a href="/account/logout" class="list-group-item-success list-group-item list-group-item-action"
-                       v-if="user.is_authenticated" v-on:click="logout()">Перейти к Logout</a>
-                    <router-link to="/login" class="list-group-item-success list-group-item list-group-item-action" v-else>Перейти к Login</router-link>
-                    <router-link to="/" class="list-group-item-success list-group-item list-group-item-action">Перейти к Home</router-link>
+                       v-if="user.is_authenticated" v-on:click="logout()">Выйти</a>
+                    <router-link to="/login" class="list-group-item-success list-group-item list-group-item-action" v-else>Вход</router-link>
+                    <router-link to="/" class="list-group-item-success list-group-item list-group-item-action">Домой</router-link>
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": true,
+        "is_authenticated": false,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
@@ -124,6 +124,8 @@ h1, h2 {
   font-weight: normal;
 }
 
-
+.nostroke:hover{
+  text-decoration: none;
+}
 
 </style>

@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     getProgList() {
-      axios.get('https://pmpulecture.herokuapp.com/api/programmes/')
+      axios.get('/api/programmes/')
         .then(response => {
           this.progList = response.data
         })

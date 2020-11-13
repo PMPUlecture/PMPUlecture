@@ -1,9 +1,9 @@
 <template>
 
-    <div class="shadow card mb-3" @click.prevent="OnClick">
+    <div class="shadow card mb-3">
       <img :src="programme.img_url" class="card-img imgback" alt="...">
       <div class="card-img-overlay d-flex justify-content-end flex-column m-md-3">
-        <a href="#" class="stretched-link text-white"><h2 class="display program-text1 text-white">{{programme.name}}</h2></a>
+        <router-link :to="'programme/'+programme.id" class="stretched-link text-white"><h2 class="display program-text1 text-white">{{programme.name}}</h2></router-link>
       </div>
     </div>
 
