@@ -47,7 +47,7 @@
               <div class="card list-group-item-success">
                 <div class="card-body">
                   <div class="list-group list-group-flush ">
-                    <a href="/account/logout" class="list-group-item-success list-group-item list-group-item-action"
+                    <a href="/account/logout/" class="list-group-item-success list-group-item list-group-item-action"
                        v-if="user.is_authenticated" v-on:click="logout()">Выйти</a>
                     <router-link to="/login" class="list-group-item-success list-group-item list-group-item-action" v-else>Вход</router-link>
                     <router-link to="/" class="list-group-item-success list-group-item list-group-item-action">Домой</router-link>
