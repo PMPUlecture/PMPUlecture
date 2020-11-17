@@ -13,8 +13,13 @@ class Programme(models.Model):
     def __str__(self):
         return self.name
 
-    def as_dict(self):
-        return {'id': self.pk, 'name': self.name, 'img_url': self.img_url}
+    def as_dict(self, *, img_url: bool = False):
+        output = {'id': self.pk,
+                  'name': self.name,
+                  }
+        if img_url:
+            output['img_url'] = self.img_url
+        return output
 
 
 class Subject(models.Model):
@@ -25,12 +30,15 @@ class Subject(models.Model):
     def __str__(self):
         return self.name + ' (' + str(self.term) + ')'
 
-    def as_dict(self):
-        return {
+    def as_dict(self, lecturer: bool = False, programme: bool = False):
+        output = {
             'id': self.id,
             'name': self.name,
-            'term': self.term,
         }
+        if lecturer:
+            output['lecturers'] = [lector.as_dict() for lector in Lecturer.objects.filter(subject=self)]
+        if programme:
+            output['programme'] = self.programme.as_dict()
 
 
 class Lecturer(models.Model):
@@ -40,32 +48,33 @@ class Lecturer(models.Model):
     vk_discuss_url = models.URLField(max_length=256, null=True)
     photo_url = models.URLField(max_length=256, null=True)
 
-    def as_dict(self, *args, subjects: bool = False, apmath: bool = False, photo: bool = False,
-                vk_discuss: bool = False,
+    def as_dict(self, *, subjects: bool = False, apmath: bool = False, photo: bool = False,
+                vk: bool = False,
                 materials: bool = False):
-        dicte = {
+        output = {
             'id': self.id,
             'name': self.name,
         }
         if subjects:
-            dicte['subjects'] = [item.as_dict() for item in self.subject.all()]
+            output['subjects'] = [item.as_dict() for item in self.subject.all()]
         if apmath:
-            dicte['apmath'] = self.apmath_url
+            output['apmath'] = self.apmath_url
         if photo:
-            dicte['photo'] = self.photo_url
-        if vk_discuss:
-            dicte['vk_discuss_url'] = self.vk_discuss_url
+            output['photo'] = self.photo_url
+        if vk:
+            output['vk_discuss_url'] = self.vk_discuss_url
         if materials:
             all_materials = Materials.objects.filter(lecturer=self)
-            dicte['materials'] = list()
+            output['materials'] = list()
             for subject in Subject.objects.filter(lecturer=self):
-                dicte['materials'].append(
+                output['materials'].append(
                     {subject.name: [
-                {type_of_material[0]: [material.as_dict() for material in all_materials.filter(type=type_of_material[0])]
-                 for type_of_material in Materials.TypeOfMaterial.choices}]
+                        {type_of_material[0]: [material.as_dict() for material in
+                                               all_materials.filter(type=type_of_material[0])]
+                         for type_of_material in Materials.TypeOfMaterial.choices}]
                     }
                 )
-        return dicte
+        return output
 
     def __str__(self):
         return self.name
@@ -94,6 +103,7 @@ class Materials(models.Model):
 
     def as_dict(self):
         return {
+            'id': self.id,
             'name': self.name,
-            'url': self.link,
+            'link': self.link,
         }

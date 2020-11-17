@@ -25,9 +25,9 @@
 
                 <template v-if="user.is_authenticated">
                   <div class="card text-white bg-info mt-3 mb-3">
-                    <h3 class="card-header text-center"><b>{{user.email}}</b></h3>
+                    <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
                   <div class="card-body">
-                    <h4 class="card-title">Добро пожаловать {{user.first_name}} {{user.last_name}}</h4>
+                    <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
                     <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
                     <button class="btn btn-outline-primary">Добавить</button>
                   </div>
