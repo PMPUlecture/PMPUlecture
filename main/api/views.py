@@ -65,43 +65,53 @@ class DetailMaterial(View):
         return resp
 
 
-class DetailProgramme(View):
+class SubjectsView(View):
+    subjects = Subject.objects.all()
+
     def get(self, request):
+        """params:
+        fields=lecturers,term,programme
+        lecturer :id
+        term :int
+        programme :id
+        """
+        if request.GET.get('lecturer'):
+            self.subjects = self.subjects.filter(lecturer=request.GET.get('lecturer'))
+        if request.GET.get('term'):
+            self.subjects = self.subjects.filter(term=request.GET.get('term'))
         if request.GET.get('programme'):
-            programme = Programme.objects.filter(name=request.GET.get('programme').rstrip('/')).first()
-            if not programme:
-                resp = JsonResponse({'error': 'there is no such programme'})
-                resp.setdefault('Access-Control-Allow-Origin', '*')
-                return resp
+            self.subjects = self.subjects.filter(programme=request.GET.get('programme'))
+
+        fields = []
+        if request.GET.get('fields'):
+            fields = list_of_fields(request.GET.get('fields'))
+        is_lecturers = 'lecturers' in fields
+        is_term = 'term' in fields
+        is_programme = 'programme' in fields
+
+        if self.subjects:
+            output = dict()
+            if request.GET.get('programme'):
+                try:
+                    output['programme'] = Programme.objects.get(pk=request.GET.get('programme')).name
+                except:
+                    resp = JsonResponse({'error': 'there are no such programme'})
+                    resp.setdefault('Access-Control-Allow-Origin', '*')
+                    return resp
+            if is_term:
+                output["terms"] = [{'term': term, 'subjects':
+                    [subj.as_dict(lecturer=is_lecturers, programme=is_programme) for subj in self.subjects.filter(term=term)]}
+                                   for term in range(1, 9)]
+            else:
+                output['subjects'] = [subj.as_dict(lecturer=is_lecturers, programme=is_programme)
+                                      for subj in self.subjects]
+            resp = JsonResponse(output)
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            return resp
         else:
-            resp = JsonResponse({'error': 'you should give a programme'})
+            resp = JsonResponse({'error': 'there are no such subjects'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
-
-        resp = JsonResponse([{'term': term, 'subjects':
-            [{'id': subject.id, 'name': subject.name, 'lecturers':
-                [{'id': lecturer.id, 'name': lecturer.name} for lecturer in Lecturer.objects.filter(subject=subject)]}
-             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)],
-                            safe=False)
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        return resp
-
-
-class DetailProgramme2(View):
-    def get(self, request, id):
-        programme = Programme.objects.get(pk=id)
-        if not programme:
-            resp = JsonResponse({'error': 'there is no such programme'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            return resp
-
-        resp = JsonResponse({"name": programme.name, "terms": [{'term': term, 'subjects':
-            [{'id': subject.id, 'name': subject.name, 'lecturers':
-                [{'id': lecturer.id, 'name': lecturer.name} for lecturer in Lecturer.objects.filter(subject=subject)]}
-             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)]},
-                            safe=False)
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        return resp
 
 
 class Programmes(View):

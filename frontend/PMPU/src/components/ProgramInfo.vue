@@ -34,7 +34,12 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('/api/programmes/'+progID)
+      axios.get('/api/subjects/',{
+        params:{
+          programme: progID,
+          fields: 'term,lecturers'
+        }
+      })
         .then(response => {
           this.progInfo = response.data
           console.log(this.progInfo)

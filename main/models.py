@@ -39,6 +39,7 @@ class Subject(models.Model):
             output['lecturers'] = [lector.as_dict() for lector in Lecturer.objects.filter(subject=self)]
         if programme:
             output['programme'] = self.programme.as_dict()
+        return output
 
 
 class Lecturer(models.Model):
