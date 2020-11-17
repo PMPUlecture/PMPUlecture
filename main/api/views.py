@@ -4,6 +4,10 @@ from ..models import Lecturer, Subject, Programme, Materials
 import json
 
 
+def list_of_fields(string: str):
+    return string.replace(' ', '').split(',')
+
+
 class DetailLecturer(View):
     def get(self, request, id):
         lecturer = Lecturer.objects.filter(pk=id).first()
@@ -32,14 +36,12 @@ class UserDetail(View):
         response = {"is_authenticated": request.user.is_authenticated}
         if response["is_authenticated"]:
             response.update(email=request.user.email,
-                            first_name = request.user.first_name,
-                            last_name =request.user.last_name)
+                            first_name=request.user.first_name,
+                            last_name=request.user.last_name)
 
         resp = JsonResponse(response)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
-
-
 
 
 class DetailMaterial(View):
@@ -79,32 +81,10 @@ class DetailProgramme(View):
         resp = JsonResponse([{'term': term, 'subjects':
             [{'id': subject.id, 'name': subject.name, 'lecturers':
                 [{'id': lecturer.id, 'name': lecturer.name} for lecturer in Lecturer.objects.filter(subject=subject)]}
-             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)], safe=False)
+             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)],
+                            safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
-
-    class DetailProgramme(View):
-        def get(self, request):
-            if request.GET.get('programme'):
-                programme = Programme.objects.filter(name=request.GET.get('programme').rstrip('/')).first()
-                if not programme:
-                    resp = JsonResponse({'error': 'there is no such programme'})
-                    resp.setdefault('Access-Control-Allow-Origin', '*')
-                    return resp
-            else:
-                resp = JsonResponse({'error': 'you should give a programme'})
-                resp.setdefault('Access-Control-Allow-Origin', '*')
-                return resp
-
-            resp = JsonResponse([{'term': term, 'subjects':
-                [{'id': subject.id, 'name': subject.name, 'lecturers':
-                    [{'id': lecturer.id, 'name': lecturer.name} for lecturer in
-                     Lecturer.objects.filter(subject=subject)]}
-                 for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)],
-                                safe=False)
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            return resp
-
 
 
 class DetailProgramme2(View):
@@ -118,17 +98,20 @@ class DetailProgramme2(View):
         resp = JsonResponse({"name": programme.name, "terms": [{'term': term, 'subjects':
             [{'id': subject.id, 'name': subject.name, 'lecturers':
                 [{'id': lecturer.id, 'name': lecturer.name} for lecturer in Lecturer.objects.filter(subject=subject)]}
-             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)]}, safe=False)
+             for subject in Subject.objects.filter(term=term, programme=programme)]} for term in range(1, 9)]},
+                            safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
 
 class Programmes(View):
     def get(self, request):
+        """params: fields=img_url"""
+        is_img_url = bool(request.GET.get('fields'))
         queryset = Programme.objects.all()
         response_raw = dict()
         for degree in Programme.TypeOfDegrees.choices:
-            response_raw[degree[0]] = [obj.as_dict() for obj in queryset.filter(degree=degree[0])]
+            response_raw[degree[0]] = [obj.as_dict(img_url=is_img_url) for obj in queryset.filter(degree=degree[0])]
         resp = JsonResponse(response_raw, safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp

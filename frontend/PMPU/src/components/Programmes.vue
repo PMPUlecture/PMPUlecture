@@ -41,7 +41,11 @@ export default {
   },
   methods: {
     getProgList() {
-      axios.get('/api/programmes/')
+      axios.get('/api/programmes/', {
+        params: {
+          fields: 'img_url'
+        }
+      })
         .then(response => {
           this.progList = response.data
         })
