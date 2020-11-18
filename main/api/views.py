@@ -8,15 +8,39 @@ def list_of_fields(string: str):
     return string.replace(' ', '').split(',')
 
 
-class DetailLecturer(View):
-    def get(self, request, id):
-        lecturer = Lecturer.objects.filter(pk=id).first()
-        if not lecturer:
+class LecturerView(View):
+    lecturers = Lecturer.objects.all()
+
+    def get(self, request):
+        """params:
+        fields=subjects,materials,apmath,photo,vk
+        id :id
+        name :string
+        subject :id
+        """
+        if request.GET.get("id"):
+            self.lecturers = self.lecturers.filter(pk=request.GET.get("id"))
+        if request.GET.get("name"):
+            self.lecturers = self.lecturers.filter(name__icontains=request.GET.get("name"))
+        if request.GET.get("subject"):
+            self.lecturers = self.lecturers.filter(subject=request.GET.get("subject"))
+
+        if not self.lecturers:
             resp = JsonResponse({'error': 'there is no such lecturer'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
 
-        return JsonResponse(lecturer.as_dict(materials=True), safe=False)
+        fields = list_of_fields(request.GET.get("fields")) if request.GET.get("fields") else []
+        is_subjects = "subjects" in fields
+        is_materials = "materials" in fields
+        is_apmath = "apmath" in fields
+        is_photo = "photo" in fields
+        is_vk = "vk" in fields
+
+        resp = JsonResponse([lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
+                                            photo=is_photo, vk=is_vk) for lector in self.lecturers], safe=False)
+        resp.setdefault('Access-Control-Allow-Origin', '*')
+        return resp
 
     def post(self, request):
         data = json.loads(request.body)
@@ -26,7 +50,7 @@ class DetailLecturer(View):
         new_lecturer = Lecturer.objects.create(**data)
         new_lecturer.subject.set(subject)
 
-        resp = JsonResponse({'ok': 'ok'})
+        resp = JsonResponse({'ok': 'ok'}, safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
@@ -44,7 +68,7 @@ class UserDetail(View):
         return resp
 
 
-class DetailMaterial(View):
+class MaterialView(View):
     def post(self, request):
         data = json.loads(request.body)
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
@@ -114,7 +138,7 @@ class SubjectsView(View):
             return resp
 
 
-class Programmes(View):
+class ProgrammeView(View):
     def get(self, request):
         """params: fields=img_url"""
         is_img_url = bool(request.GET.get('fields'))
