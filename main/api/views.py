@@ -137,6 +137,21 @@ class SubjectsView(View):
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
 
+    def post(self, request):
+        data = json.loads(request.body)
+        data['programme'] = Programme.objects.filter(pk=data['programme']).first()
+        if not data['programme']:
+            resp = JsonResponse({'error': 'there is no such programme'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            return resp
+        data['term'] = int(data['term'])
+
+        Subject.objects.create(**data)
+
+        resp = JsonResponse({'ok': 'ok'})
+        resp.setdefault('Access-Control-Allow-Origin', '*')
+        return resp
+
 
 class ProgrammeView(View):
     def get(self, request):
