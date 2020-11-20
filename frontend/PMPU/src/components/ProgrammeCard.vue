@@ -1,16 +1,16 @@
 <template>
 
-    <div class="shadow card mb-3">
-      <img :src="programme.img_url" class="card-img imgback" alt="...">
-      <div class="card-img-overlay d-flex justify-content-end flex-column m-md-3">
-        <router-link :to="'programme/'+programme.id" class="stretched-link text-white"><h2 class="display program-text1 text-white">{{programme.name}}</h2></router-link>
-      </div>
+  <div class="shadow card mb-3">
+    <img :src="programme.img_url" class="card-img imgback" alt="...">
+    <div class="card-img-overlay d-flex justify-content-end flex-column m-md-3">
+      <router-link :to="'programme/'+programme.id" class="stretched-link text-white"><h2
+        class="display program-text1 text-white">{{ programme.name }}</h2></router-link>
     </div>
+  </div>
 
 </template>
 
 <script>
-import axios from "axios";
 
 export default {
   props: {
@@ -19,12 +19,9 @@ export default {
       required: true
     }
   },
-  methods: {
-    OnClick() {
-      console.log('clicked')
-      const progName = this.programme.name
-      console.log(progName)
-      this.$emit('show-prog',progName)
+  data () {
+    return {
+      loading: false
     }
   },
   name: "ProgrammeCard"
@@ -33,12 +30,12 @@ export default {
 
 <style scoped>
 
-a:hover{
+a:hover {
   text-decoration: none; /* Отменяем подчеркивание у ссылки */
 }
 
 
-.imgback{
+.imgback {
   max-height: 250px;
   object-fit: cover;
 }

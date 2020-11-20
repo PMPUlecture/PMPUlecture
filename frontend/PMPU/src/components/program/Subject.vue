@@ -10,6 +10,7 @@
         <div class="list-group card-body pl-4">
           <Lecturer v-for="lecturer in this.subjectInfo.lecturers"
                     :lecturerInfo="lecturer"
+                    :currentsubject="subjectInfo.id"
           />
 
       </div>
@@ -36,11 +37,6 @@ export default {
   components: {
     Lecturer,
   },
-  data() {
-    return {
-
-    }
-  }
 }
 </script>
 
