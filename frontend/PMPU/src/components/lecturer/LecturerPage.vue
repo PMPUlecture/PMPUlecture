@@ -12,9 +12,9 @@
 
           <div class="list-group">
             <li class="list-group-item list-group-item-primary">Страница преподавателя на сайте факультета</li>
-            <a :href="lecturerInfo.apmath" class="list-group-item list-group-item-action"> {{ lecturerInfo.apmath }} </a>
+            <a :href="lecturerInfo.apmath" target="blank" class="list-group-item list-group-item-action"> {{ lecturerInfo.apmath }} </a>
             <li class="list-group-item list-group-item-primary">Обсуждение и отзывы в группе ВК</li>
-            <a :href="lecturerInfo.vk_discuss_url" class="list-group-item list-group-item-action"> {{ lecturerInfo.vk_discuss_url }} </a>
+            <a :href="lecturerInfo.vk_discuss_url" target="blank" class="list-group-item list-group-item-action"> {{ lecturerInfo.vk_discuss_url }} </a>
           </div>
 
         </div>
