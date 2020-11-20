@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('http://pmpulecture.herokuapp.com/api/subjects/', {
+      axios.get('/api/subjects/', {
         params: {
           programme: progID,
           fields: 'term,lecturers'

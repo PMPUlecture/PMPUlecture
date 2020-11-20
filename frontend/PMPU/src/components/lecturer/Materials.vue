@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     getMaterials(subjectID) {
-      axios.get('http://pmpulecture.herokuapp.com/api/lecturers/', {
+      axios.get('/api/lecturers/', {
         params: {
           id: this.lecturerID,
           id_subject_for_material: this.subjectID,
