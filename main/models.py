@@ -51,7 +51,7 @@ class Lecturer(models.Model):
 
     def as_dict(self, *, subjects: bool = False, apmath: bool = False, photo: bool = False,
                 vk: bool = False,
-                materials: bool = False):
+                materials: bool = False, id_subject_for_material: int = None):
         output = {
             'id': self.id,
             'name': self.name,
@@ -67,11 +67,15 @@ class Lecturer(models.Model):
         if materials:
             all_materials = Materials.objects.filter(lecturer=self)
             output['materials'] = list()
-            for subject in Subject.objects.filter(lecturer=self):
+            if id_subject_for_material:
+                subjects = Subject.objects.filter(lecturer=self, id = id_subject_for_material)
+            else:
+                subjects = Subject.objects.filter(lecturer=self)
+            for subject in subjects:
                 output['materials'].append(
-                    {subject.name: [
+                    {"id_subject": subject.id, "name": subject.name, "source": [
                         {type_of_material[0]: [material.as_dict() for material in
-                                               all_materials.filter(type=type_of_material[0])]
+                                               all_materials.filter(subject=subject, type=type_of_material[0])]
                          for type_of_material in Materials.TypeOfMaterial.choices}]
                     }
                 )

@@ -17,6 +17,7 @@ class LecturerView(View):
         id :id
         name :string
         subject :id
+        id_subject_for_material :id
         """
         if request.GET.get("id"):
             self.lecturers = self.lecturers.filter(pk=request.GET.get("id"))
@@ -37,8 +38,11 @@ class LecturerView(View):
         is_photo = "photo" in fields
         is_vk = "vk" in fields
 
+        id_subject = request.GET.get('id_subject_for_material') or None
+        print(id_subject)
+
         resp = JsonResponse([lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
-                                            photo=is_photo, vk=is_vk) for lector in self.lecturers], safe=False)
+                                            photo=is_photo, vk=is_vk, id_subject_for_material=id_subject) for lector in self.lecturers], safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
