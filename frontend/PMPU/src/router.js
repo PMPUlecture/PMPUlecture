@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Programmes from "./components/Programmes";
 import Login from "./components/Login";
 import ProgramInfo from "./components/ProgramInfo";
+import LecturerPage from "./components/lecturer/LecturerPage";
 
 Vue.use(Router)
 
@@ -22,5 +23,10 @@ export default new Router({
       component: ProgramInfo,
       props: true
     },
+    {
+      path: '/lecturer/:lecturerID',
+      component: LecturerPage,
+      props: true
+    }
   ]
 })

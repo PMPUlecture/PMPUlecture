@@ -1,13 +1,13 @@
 <template>
 
   <div>
-    <p class="progname">{{ progInfo.name }}</p>
+    <p class="progname">{{ progInfo.programme }} </p>
     <div class="accordion" id="programme">
-        <Term v-for="term in progInfo.terms"
-              :termInfo="term"
-        />
+      <Term v-for="term in progInfo.terms"
+            :termInfo="term"
+      />
     </div>
-    </div>
+  </div>
 
 
 </template>
@@ -34,8 +34,8 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('/api/subjects/',{
-        params:{
+      axios.get('http://pmpulecture.herokuapp.com/api/subjects/', {
+        params: {
           programme: progID,
           fields: 'term,lecturers'
         }
@@ -47,7 +47,6 @@ export default {
         .catch(error => {
           console.log(error);
         })
-      this.progInfo = "nonnono";
     },
   }
 }

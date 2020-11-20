@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     getUser() {
-      axios.get('/api/user/')
+      axios.get('http://pmpulecture.herokuapp.com/api/user/')
         .then(response => {
           this.user = response.data
         })
@@ -107,14 +107,8 @@ export default {
         })
     },
     logout() {
-      axios.get('/accout/logout/')
+      axios.get('http://pmpulecture.herokuapp.com/accout/logout/')
     },
-    changeView(progName){
-      console.log('changeView1()')
-      console.log(progName)
-      this.state = 'info'
-      this.progName = progName
-    }
   }
 }
 </script>
