@@ -54,7 +54,7 @@ class LecturerView(View):
         new_lecturer = Lecturer.objects.create(**data)
         new_lecturer.subject.set(subject)
 
-        resp = JsonResponse({'ok': 'ok'}, safe=False)
+        resp = JsonResponse({'status': 'ok'}, safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
@@ -77,18 +77,18 @@ class MaterialView(View):
         data = json.loads(request.body)
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
         if not data['subject']:
-            resp = JsonResponse({'error': 'there is no such subject'})
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
         data['lecturer'] = Lecturer.objects.filter(id=int(data['lecturer'])).first()
         if not data['lecturer']:
-            resp = JsonResponse({'error': 'there is no such lecturer'})
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
 
         Materials.objects.create(**data)
 
-        resp = JsonResponse({'ok': 'ok'})
+        resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
@@ -145,14 +145,14 @@ class SubjectsView(View):
         data = json.loads(request.body)
         data['programme'] = Programme.objects.filter(pk=data['programme']).first()
         if not data['programme']:
-            resp = JsonResponse({'error': 'there is no such programme'})
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such programme'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
         data['term'] = int(data['term'])
 
         Subject.objects.create(**data)
 
-        resp = JsonResponse({'ok': 'ok'})
+        resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
