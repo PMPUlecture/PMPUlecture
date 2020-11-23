@@ -1,12 +1,12 @@
 <template>
-  <div class="text-center m-auto d-flex align-content-between flex-column">
-    <h2 class="m-4">Вход</h2>
+  <div class="text-center m-auto d-flex align-content-between flex-column center card bg-light">
+    <h2 class="p-4 card-header">Вход</h2>
 
-    <div class="alert alert-danger" role="alert" v-if="$route.query.error === '1'">
+    <div class="card-header bg-danger" role="alert" v-if="$route.query.error === '1'">
       Неправильный логин или пароль!
     </div>
 
-    <div class="text-left d-flex m-auto">
+    <div class="text-left card-body">
       <form action="/account/login/" method="post">
         <div class="form-group row">
           <input type="hidden" name="csrfmiddlewaretoken" :value=getCSRF>
@@ -19,10 +19,10 @@
         <div class="form-group row">
           <label class="col-sm-2">Пароль:</label>
           <div class="col-sm-10">
-          <input type="password" class="form-control" name="password" id="InputPassword">
+            <input type="password" class="form-control" name="password" id="InputPassword">
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Войти</button>
       </form>
     </div>
   </div>
@@ -30,7 +30,7 @@
 
 <script>
 export default {
-name: "Login",
+  name: "Login",
   computed: {
     getCSRF: function () {
       console.log(this.$cookies)
@@ -45,5 +45,7 @@ name: "Login",
 </script>
 
 <style scoped>
-
+.center{
+  max-width: 50em;
+}
 </style>
