@@ -65,7 +65,8 @@ class UserDetail(View):
         if response["is_authenticated"]:
             response.update(email=request.user.email,
                             first_name=request.user.first_name,
-                            last_name=request.user.last_name)
+                            last_name=request.user.last_name,
+                            is_admin= True if request.user.groups.last() else False),
 
         resp = JsonResponse(response)
         resp.setdefault('Access-Control-Allow-Origin', '*')

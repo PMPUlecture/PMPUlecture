@@ -1,5 +1,5 @@
 from django.db import models
-
+from account.models import User
 
 class Programme(models.Model):
     class TypeOfDegrees(models.TextChoices):
@@ -102,6 +102,8 @@ class Materials(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     lecturer = models.ForeignKey(Lecturer, on_delete=models.SET_NULL, null=True)
     link = models.URLField(max_length=256, null=True)
+    author = models.ForeignKey(User, blank=True, on_delete=models.SET_NULL, null=True)
+    last_update = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

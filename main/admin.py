@@ -17,6 +17,7 @@ class MaterialsInline(admin.TabularInline):
 @admin.register(Lecturer)
 class LecturerAdmin(admin.ModelAdmin):
     list_display = ('name', 'display_subjects')
+    list_filter = ('subject',)
 
     fieldsets = (
         (None, {
@@ -36,6 +37,6 @@ class PregrammeAdmin(admin.ModelAdmin):
 @admin.register(Materials)
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'subject', 'lecturer')
-    list_filter = ('type', 'subject', 'lecturer')
+    list_filter = ('type', 'subject', 'lecturer', 'last_update')
 
 
