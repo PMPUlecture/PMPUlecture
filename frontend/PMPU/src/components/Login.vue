@@ -40,6 +40,9 @@ export default {
         return 'no token'
       }
     }
+  },
+  created() {
+    document.title = 'ПМ-ПУ | Вход';
   }
 }
 </script>
