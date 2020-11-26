@@ -9,3 +9,5 @@ psycopg2==2.8.6
 pytz==2020.1
 sqlparse==0.4.0
 whitenoise==5.2.0
+social-auth-app-django==4.0.0
+social-auth-core==3.3.3
