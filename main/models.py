@@ -1,6 +1,7 @@
 from django.db import models
 from account.models import User
 
+
 class Programme(models.Model):
     class TypeOfDegrees(models.TextChoices):
         BACHELOR = ("bachelor", "Бакалавриат")

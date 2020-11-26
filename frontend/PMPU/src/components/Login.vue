@@ -1,8 +1,8 @@
 <template>
-  <div class="text-center m-auto d-flex align-content-between flex-column center card bg-light"  style="max-width: 600px;">
+  <div class="text-center m-auto d-flex align-content-between flex-column center card bg-light">
     <h2 class="p-4 card-header">Вход</h2>
 
-    <div class="card-header bg-danger text-white" role="alert" v-if="$route.query.error === '1'">
+    <div class="card-header bg-danger" role="alert" v-if="$route.query.error === '1'">
       Неправильный логин или пароль!
     </div>
     <div class="alert alert-danger" role="alert" style="background-color: #ed7669" v-if="$route.query.error === '2'">
@@ -37,7 +37,7 @@
 
 <script>
 export default {
-name: "Login",
+  name: "Login",
   computed: {
     getCSRF: function () {
       console.log(this.$cookies)
@@ -47,10 +47,15 @@ name: "Login",
         return 'no token'
       }
     }
+  },
+  created() {
+    document.title = 'ПМ-ПУ | Вход';
   }
 }
 </script>
 
 <style scoped>
-
+.center{
+  max-width: 50em;
+}
 </style>

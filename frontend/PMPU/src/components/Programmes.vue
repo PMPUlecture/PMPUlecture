@@ -46,6 +46,7 @@ export default {
       })
         .then(response => {
           this.progList = response.data
+          document.title = 'ПМ-ПУ';
         })
         .catch(error => {
           console.log(error);

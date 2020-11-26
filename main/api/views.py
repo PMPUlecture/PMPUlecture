@@ -3,6 +3,7 @@ from django.views import View
 from ..models import Lecturer, Subject, Programme, Materials
 import json
 
+from django.contrib.auth.models import AnonymousUser
 
 def list_of_fields(string: str):
     return string.replace(' ', '').split(',')
@@ -74,23 +75,34 @@ class UserDetail(View):
 
 
 class MaterialView(View):
+
     def post(self, request):
         data = json.loads(request.body)
+        print(data)
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
         if not data['subject']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
         data['lecturer'] = Lecturer.objects.filter(id=int(data['lecturer'])).first()
         if not data['lecturer']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
+        print(request.user)
+        if request.user.is_authenticated:
+            data['author'] = request.user
 
         Materials.objects.create(**data)
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return resp
 
 

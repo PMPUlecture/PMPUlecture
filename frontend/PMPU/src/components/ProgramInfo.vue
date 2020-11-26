@@ -30,7 +30,8 @@ export default {
     }
   },
   created() {
-    this.getProgInfo(this.progID)
+    this.getProgInfo(this.progID);
+
   },
   methods: {
     getProgInfo(progID) {
@@ -43,6 +44,7 @@ export default {
         .then(response => {
           this.progInfo = response.data
           console.log(this.progInfo)
+          document.title = 'ПМ-ПУ | ' + this.progInfo.programme;
         })
         .catch(error => {
           console.log(error);
