@@ -39,6 +39,7 @@
                     <h4 class="card-title">Вход не выполнен</h4>
                     <p class="card-text">Вы не вошли на сайт. Вы можете просматривать метериалы, но чтобы добавить свои
                     необходимо войти.</p>
+                    <a class="btn btn-danger" href="/account/login/google-oauth2/">Вход через Google</a>
 
                   </div>
                   </div>

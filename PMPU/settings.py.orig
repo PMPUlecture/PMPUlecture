@@ -9,9 +9,12 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os
-import os
+<<<<<<< Updated upstream
 import django_heroku
+=======
+import os
+#import django_heroku
+>>>>>>> Stashed changes
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'account',
-    'social_django',
 ]
 
 
@@ -104,14 +106,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+<<<<<<< Updated upstream
+=======
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='643037001587-lgb3dfmslom4c21au8rjof525addtn7l.apps.googleusercontent.com' #'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY' in os.environ
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'Yv7_dphhuvz4Eh6Ixu6C8utc'#'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET' in os.environ
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['student.spbu.ru']
 SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_HOSTED_DOMAINS = ['student.spbu.ru']
@@ -138,6 +141,7 @@ LOGIN_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
+>>>>>>> Stashed changes
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -151,6 +155,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+import os
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Static files (CSS, JavaScript, Images)
@@ -159,9 +164,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Heroku: Update database configuration from $DATABASE_URL.
-import dj_database_url
+#import dj_database_url
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+#db_from_env = dj_database_url.config(conn_max_age=500)
+#DATABASES['default'].update(db_from_env)
 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
