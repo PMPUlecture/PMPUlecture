@@ -4,7 +4,7 @@
     <h5 class="card-header text-center"> Добавление материала </h5>
     <div class="card-body text-dark">
 
-      <form>
+      <form @submit.prevent="postMaterial">
 
         <div class="form-group">
 
@@ -49,7 +49,7 @@
           </select>
 
           <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary" :disabled="disableButton" @click="postMaterial"> Отправить </button>
+            <button type="submit" class="btn btn-primary" :disabled="disableButton"> Отправить </button>
           </div>
 
         </div>
@@ -147,18 +147,20 @@ export default {
       this.resetField('typeField', 'disableField8')
       this.disableButton = true
 
-      axios.get('http://pmpulecture.herokuapp.com/api/programmes/')
-        .then(response => {
-          if (this.degreeField == 'Бакалавриат')
-            this.programs = response.data.bachelor
-          else if (this.degreeField == 'Магистратура')
-            this.programs = response.data.master
-          this.disableField2 = false
-        })
-        .catch(error => {
-          console.log(error);
-          console.log('bad');
-        })
+      if (this.degreeField != '') {
+        axios.get('http://pmpulecture.herokuapp.com/api/programmes/')
+          .then(response => {
+            if (this.degreeField == 'Бакалавриат')
+              this.programs = response.data.bachelor
+            else if (this.degreeField == 'Магистратура')
+              this.programs = response.data.master
+            this.disableField2 = false
+          })
+          .catch(error => {
+            console.log(error);
+            console.log('bad');
+          })
+      }
     },
     getSubjects() {
       let semester = this.semesterField
@@ -232,6 +234,16 @@ export default {
       const str = JSON.stringify(this.material);
       axios.post('http://pmpulecture.herokuapp.com/api/material/', str)
         .then((response) => {
+          this.degreeField = ''
+          this.resetField('programField', 'disableField2')
+          this.resetField('semesterField', 'disableField3')
+          this.resetField('subjectField', 'disableField4')
+          this.resetField('lecturerField', 'disableField5')
+          this.resetField('titleField', 'disableField6')
+          this.resetField('linkField', 'disableField7')
+          this.resetField('typeField', 'disableField8')
+          this.disableButton = true
+
           alert('Успешно отправлено!')
         })
         .catch((error) => {
