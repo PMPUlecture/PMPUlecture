@@ -89,7 +89,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": false,
+        "is_authenticated": true, //false
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
@@ -101,7 +101,11 @@ export default {
   },
   methods: {
     getUser() {
+<<<<<<< HEAD
+      axios.get('/api/user/')
+=======
       axios.get('http://pmpulecture.herokuapp.com/api/userш/')
+>>>>>>> frontend
         .then(response => {
           this.user = response.data
         })
