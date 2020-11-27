@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
 from ..models import Lecturer, Subject, Programme, Materials
+from django.core.exceptions import ValidationError
 import json
 
 from django.contrib.auth.models import AnonymousUser
@@ -80,6 +81,11 @@ class MaterialView(View):
         data = json.loads(request.body)
         print(data)
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
+        
+        if len(data['link'].split("://")) == 1:
+            data['link'] = "http://" + data['link']
+        print(data)
+
         if not data['subject']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
@@ -97,7 +103,20 @@ class MaterialView(View):
         if request.user.is_authenticated:
             data['author'] = request.user
 
-        Materials.objects.create(**data)
+        metarial = Materials.objects.create(**data)
+        try:
+            metarial.clean_fields()
+        except ValidationError as e:
+            if 'link' in e.message_dict:
+                resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
+            else:
+                resp = JsonResponse({'status': 'error', 'error': e.message_dict})
+                return resp
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')

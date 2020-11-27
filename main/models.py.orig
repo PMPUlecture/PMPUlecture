@@ -1,9 +1,9 @@
-from django.core.validators import URLValidator
 from django.db import models
 from account.models import User
+<<<<<<< HEAD
+=======
 
-
-
+>>>>>>> frontend
 
 class Programme(models.Model):
     class TypeOfDegrees(models.TextChoices):
@@ -105,9 +105,12 @@ class Materials(models.Model):
     type = models.CharField(max_length=16, choices=TypeOfMaterial.choices)
     subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     lecturer = models.ForeignKey(Lecturer, on_delete=models.SET_NULL, null=True)
-    link = models.URLField(max_length=256, null=True, validators=[URLValidator,])
+    link = models.URLField(max_length=256, null=True)
     author = models.ForeignKey(User, blank=True, on_delete=models.SET_NULL, null=True)
+<<<<<<< HEAD
     last_update = models.DateTimeField(auto_now=True)
+=======
+>>>>>>> frontend
 
     def __str__(self):
         return self.name
