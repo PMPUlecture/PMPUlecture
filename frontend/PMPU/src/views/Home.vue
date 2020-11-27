@@ -29,7 +29,9 @@
                   <div class="card-body">
                     <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
                     <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
-                    <button class="btn btn-outline-primary">Добавить</button>
+                      <router-link :to="'/add_materials'" >
+                        <button class="btn btn-outline-primary" > Добавить </button>
+                      </router-link>
                   </div>
                   </div>
                 </template>
@@ -86,7 +88,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": false,
+        "is_authenticated": true, //false
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
@@ -98,7 +100,7 @@ export default {
   },
   methods: {
     getUser() {
-      axios.get('http://pmpulecture.herokuapp.com/api/user/')
+      axios.get('http://pmpulecture.herokuapp.com/api/userш/')
         .then(response => {
           this.user = response.data
         })

@@ -4,6 +4,7 @@ import Programmes from "./components/Programmes";
 import Login from "./components/Login";
 import ProgramInfo from "./components/ProgramInfo";
 import LecturerPage from "./components/lecturer/LecturerPage";
+import AddMaterials from "./components/AddMaterials";
 
 Vue.use(Router)
 
@@ -17,6 +18,10 @@ export default new Router({
     {
       path: '/login',
       component: Login,
+    },
+    {
+      path: '/add_materials',
+      component: AddMaterials,
     },
     {
       path: '/programme/:progID',
