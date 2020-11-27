@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     getUser() {
-      axios.get('http://pmpulecture.herokuapp.com/api/userш/')
+      axios.get('http://pmpulecture.herokuapp.com/api/user/')
         .then(response => {
           this.user = response.data
         })
