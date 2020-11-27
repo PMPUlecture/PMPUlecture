@@ -229,8 +229,6 @@ export default {
       this.material.lecturer = this.lecturerField
       this.material.link = this.linkField
 
-      console.log(this.material)
-
       const str = JSON.stringify(this.material);
       axios.post('http://pmpulecture.herokuapp.com/api/material/', str)
         .then((response) => {
