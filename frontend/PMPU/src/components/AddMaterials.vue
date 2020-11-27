@@ -148,7 +148,7 @@ export default {
       this.disableButton = true
 
       if (this.degreeField != '') {
-        axios.get('http://pmpulecture.herokuapp.com/api/programmes/')
+        axios.get('/api/programmes/')
           .then(response => {
             if (this.degreeField == 'Бакалавриат')
               this.programs = response.data.bachelor
@@ -174,7 +174,7 @@ export default {
       this.disableButton = true
 
       if (this.semesterField != '') {
-        axios.get('http://pmpulecture.herokuapp.com/api/subjects/', {
+        axios.get('/api/subjects/', {
           params: {
             term: semester,
             programme: this.programField
@@ -199,7 +199,7 @@ export default {
       this.disableButton = true
 
       if (this.subjectField != '') {
-        axios.get('http://pmpulecture.herokuapp.com/api/lecturers/', {
+        axios.get('/api/lecturers/', {
           params: {
             subject: this.subjectField
           }
@@ -232,7 +232,7 @@ export default {
       this.material.link = this.linkField
 
       const str = JSON.stringify(this.material);
-      axios.post('http://pmpulecture.herokuapp.com/api/material/', str)
+      axios.post('/api/material/', str)
         .then((response) => {
           this.degreeField = ''
           this.resetField('programField', 'disableField2')
