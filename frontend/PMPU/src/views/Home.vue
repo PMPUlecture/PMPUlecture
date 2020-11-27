@@ -84,7 +84,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": true,
+        "is_authenticated": false,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
