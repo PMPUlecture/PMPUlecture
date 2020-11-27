@@ -4,6 +4,7 @@ import Programmes from "./components/Programmes";
 import Login from "./components/Login";
 import ProgramInfo from "./components/ProgramInfo";
 import LecturerPage from "./components/lecturer/LecturerPage";
+import AddMaterials from "./components/AddMaterials";
 
 Vue.use(Router)
 
@@ -19,6 +20,10 @@ const router = new Router({
       path: '/login',
       component: Login,
       meta: {title: "Пм-Пу | Вход"}
+    },
+    {
+      path: '/add_materials',
+      component: AddMaterials,
     },
     {
       path: '/programme/:progID',
