@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Loader v-if="loading"></Loader>
       <h3 v-if="progList.bachelor.length" class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Бакалавриат</span></h3>
 
       <div class="w-auto  p-1"></div>
@@ -22,20 +23,24 @@
 
 import axios from "axios";
 import ProgrammeCard from "./ProgrammeCard";
+import Loader from "./Loader";
+import Login from "./Login";
 
 export default {
   //name: 'App',
   components: {
+    Loader,
+    Login,
     ProgrammeCard,
   },
   data() {
     return {
-      progList: null,
-      progInfo: null,
+      progList: {bachelor: [], master: []},
       loading: true,
     }
   },
-  created() {
+  mounted() {
+    document.title = 'ПМ-ПУ';
     this.getProgList()
   },
   methods: {
@@ -46,8 +51,8 @@ export default {
         }
       })
         .then(response => {
-          this.progList = response.data
-          document.title = 'ПМ-ПУ';
+            this.progList = response.data
+            this.loading = false;
         })
         .catch(error => {
           console.log(error);

@@ -1,8 +1,8 @@
 <template>
 
   <div>
-
-    <div class="container-fluid">
+      <Loader v-if="loading"></Loader>
+    <div v-if="!loading" class="container-fluid">
       <div class="row">
         <div class="col-3 ">
           <img :src="lecturerInfo.photo" alt="фото" class="w-100">
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="container-fluid">
+    <div v-if="!loading" class="container-fluid">
       <Materials
         v-for="material in lecturerInfo.materials"
         :material="material"
@@ -42,21 +42,20 @@
 
 import axios from "axios";
 import Materials from "./Materials"
+import Loader from "../Loader";
 
 export default {
   name: "LecturerPage",
   props: ['lecturerID',],
-  //props: {
-  //  lecturerID: Number,
-  //  currentsubject1: Number,
-  //},
   components: {
+    Loader,
     Materials,
   },
   data() {
     return {
-      lecturerInfo: null,
+      lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
       subjectID: this.$route.query.subjectID,
+      loading: true,
     }
   },
   created() {
@@ -80,6 +79,7 @@ export default {
           this.lecturerInfo = response.data[0]
           document.title = 'ПМ-ПУ | ' + this.lecturerInfo.name
           console.log(this.lecturerInfo.materials)
+          this.loading = false;
         })
         .catch(error => {
           console.log(error);

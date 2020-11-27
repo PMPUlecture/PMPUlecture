@@ -1,6 +1,7 @@
 <template>
 
   <div>
+    <Loader v-if="loading"></Loader>
     <p class="progname">{{ progInfo.programme }} </p>
     <div class="accordion" id="programme">
       <Term v-for="term in progInfo.terms"
@@ -16,17 +17,20 @@
 
 import axios from "axios";
 import Term from '../components/program/Term';
+import Loader from "./Loader";
 
 export default {
   name: "ProgramInfo",
   props: ['progID',]
   ,
   components: {
+    Loader,
     Term,
   },
   data() {
     return {
-      progInfo: null,
+      progInfo: {terms: [], programme: ''},
+      loading: true
     }
   },
   created() {
@@ -35,7 +39,7 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('http://127.0.0.1:8000/api/subjects/', {
+      axios.get('/api/subjects/', {
         params: {
           programme: progID,
           fields: 'term,lecturers'
@@ -45,6 +49,7 @@ export default {
           this.progInfo = response.data
           console.log(this.progInfo)
           document.title = 'ПМ-ПУ | ' + this.progInfo.programme;
+          this.loading = false;
         })
         .catch(error => {
           console.log(error);

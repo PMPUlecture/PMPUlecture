@@ -1,6 +1,8 @@
 <template>
-  <div class="spinner-border text-primary loader" role="status">
-    <span class="sr-only">Loading...</span>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
   </div>
 </template>
 

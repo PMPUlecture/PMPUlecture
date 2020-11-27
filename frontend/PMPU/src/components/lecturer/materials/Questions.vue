@@ -6,7 +6,7 @@
         <!-- <h5 class="card-title">Light card title</h5> -->
         <!-- <p class="card-text"> {{this.sources}} </p> -->
         <div v-for="source in this.sources">
-          <a :href="source.link" > {{source.name}} </a>
+          <a target="_blank" :href="source.link" > {{source.name}} </a>
         </div>
       </div>
     </div>
