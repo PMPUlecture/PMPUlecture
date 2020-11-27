@@ -5,13 +5,13 @@
     <div class="container-fluid min-vh-100">
       <div class="row bg-primary text-white mb-5">
         <div class="col m-2">
-          <a class="stretched-link text-white nostroke" href="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></a>
+          <router-link class="stretched-link text-white nostroke " to="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></router-link>
         </div>
       </div>
       <div class="row">
         <div class="col-3">  <!-- левая колонка со ссылками, не меняется -->
 
-            <div class="d-flex flex-column justify-content-between sticky-top">
+            <div class="d-flex flex-column justify-content-between my-sticky-top">
               <div class="card">
                 <div class="card-body">
                 <div class="list-group list-group-flush">
@@ -26,15 +26,21 @@
                 <template v-if="user.is_authenticated">
                   <div class="card text-white bg-info mt-3 mb-3">
                     <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
-                  <div class="card-body">
-                    <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
-                    <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
-                      <router-link :to="'/add_materials'" >
-                        <button class="btn btn-outline-primary" > Добавить </button>
-                      </router-link>
+                      <div class="card-body">
+                        <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
+                        <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
+
+                        <div class="d-flex justify-content-between">
+                          <router-link :to="'/add_materials'">
+                              <button class="btn btn-outline-primary">Добавить </button>
+                          </router-link>
+                          <a href="/account/logout/" class="btn btn-danger">Выйти</a>
+                      </div>
+                      </div>
                   </div>
-                  </div>
+
                 </template>
+
                 <template v-else>
                   <div class="card text-white bg-warning mt-3 mb-3">
                   <div class="card-body">
@@ -46,17 +52,6 @@
                   </div>
                   </div>
                 </template>
-
-              <div class="card list-group-item-success">
-                <div class="card-body">
-                  <div class="list-group list-group-flush ">
-                    <a href="/account/logout/" class="list-group-item-success list-group-item list-group-item-action"
-                       v-if="user.is_authenticated" v-on:click="logout()">Выйти</a>
-                    <router-link to="/login" class="list-group-item-success list-group-item list-group-item-action" v-else>Вход</router-link>
-                    <router-link to="/" class="list-group-item-success list-group-item list-group-item-action">Домой</router-link>
-                  </div>
-                </div>
-              </div>
 
             </div>
 
@@ -89,7 +84,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": false,
+        "is_authenticated": true,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
@@ -123,6 +118,12 @@ h1, h2 {
 
 .nostroke:hover{
   text-decoration: none;
+}
+
+.my-sticky-top{
+  position: sticky;
+  left: 0;
+  top: 3em;
 }
 
 </style>

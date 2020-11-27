@@ -21,10 +21,18 @@
       </div>
     </div>
 
-    <Materials
-      :subjectID="this.subjID"
-      :lecturerID="this.lecturerID"
-    />
+    <div class="container-fluid">
+      <Materials
+        v-for="material in lecturerInfo.materials"
+        :material="material"
+        :subjectID="subjID"
+        :lecturerID="lecturerID"
+      />
+      <div class="row">
+        <button id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
+      </div>
+    </div>
+
 
   </div>
 
@@ -48,29 +56,50 @@ export default {
   data() {
     return {
       lecturerInfo: null,
-      subjID: this.$route.query.subjectID,
+      subjectID: this.$route.query.subjectID,
     }
   },
   created() {
     console.log(this.currentsubject1)
     this.getLecturerInfo(this.lecturerID)
   },
+  beforeRouteUpdate (to, from, next) {
+    console.log(to)
+    this.getLecturerInfo(this.lecturerID);
+  },
   methods: {
     getLecturerInfo(lecturerID) {
       axios.get('/api/lecturers/', {
         params: {
           id: lecturerID,
-          fields: 'apmath,photo,vk'
+          fields: 'apmath,photo,vk,materials',
+          id_subject_for_material: this.subjectID,
         }
       })
         .then(response => {
           this.lecturerInfo = response.data[0]
           document.title = 'ПМ-ПУ | ' + this.lecturerInfo.name
+          console.log(this.lecturerInfo.materials)
         })
         .catch(error => {
           console.log(error);
         })
     },
+    getMaterials() {
+      axios.get('/api/lecturers/', {
+        params: {
+          id: this.lecturerID,
+          fields: 'materials'
+        }
+      })
+        .then(response => {
+          this.lecturerInfo.materials = response.data[0].materials
+          document.getElementById("getAll").className += " invisible";
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
   }
 }
 

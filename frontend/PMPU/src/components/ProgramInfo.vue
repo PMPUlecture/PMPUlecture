@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('/api/subjects/', {
+      axios.get('http://127.0.0.1:8000/api/subjects/', {
         params: {
           programme: progID,
           fields: 'term,lecturers'

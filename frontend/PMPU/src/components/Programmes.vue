@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h3 class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Бакалавриат</span></h3>
+      <h3 v-if="progList.bachelor.length" class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Бакалавриат</span></h3>
 
       <div class="w-auto  p-1"></div>
 
@@ -8,7 +8,7 @@
                     v-bind:programme="programme"
     />   <!-- v-bind:programme="programme" - передача параметров -->
 
-    <h3 class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Магистратура</span></h3>
+    <h3 v-if="progList.master.length" class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Магистратура</span></h3>
 
     <ProgrammeCard v-for="programme in progList.master"
                    v-bind:programme="programme"
@@ -32,6 +32,7 @@ export default {
     return {
       progList: null,
       progInfo: null,
+      loading: true,
     }
   },
   created() {

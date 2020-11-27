@@ -5,7 +5,7 @@
     <div class="container-fluid min-vh-100">
       <div class="row bg-primary text-white mb-5">
         <div class="col m-2">
-          <a class="stretched-link text-white nostroke" href="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></a>
+          <router-link class="stretched-link text-white nostroke" to="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></router-link>
         </div>
       </div>
       <div class="row">
@@ -29,12 +29,20 @@
                   <div class="card-body">
                     <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
                     <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
+<<<<<<< Updated upstream
                       <router-link :to="'/add_materials'" >
                         <button class="btn btn-outline-primary" > Добавить </button>
                       </router-link>
+=======
+                    <div class="d-flex justify-content-between">
+                      <button class="btn btn-outline-primary">Добавить</button>
+                      <a href="/account/logout/" class="btn btn-danger">Выйти</a>
+                    </div>
+>>>>>>> Stashed changes
                   </div>
                   </div>
                 </template>
+
                 <template v-else>
                   <div class="card text-white bg-warning mt-3 mb-3">
                   <div class="card-body">
@@ -46,17 +54,6 @@
                   </div>
                   </div>
                 </template>
-
-              <div class="card list-group-item-success">
-                <div class="card-body">
-                  <div class="list-group list-group-flush ">
-                    <a href="/account/logout/" class="list-group-item-success list-group-item list-group-item-action"
-                       v-if="user.is_authenticated" v-on:click="logout()">Выйти</a>
-                    <router-link to="/login" class="list-group-item-success list-group-item list-group-item-action" v-else>Вход</router-link>
-                    <router-link to="/" class="list-group-item-success list-group-item list-group-item-action">Домой</router-link>
-                  </div>
-                </div>
-              </div>
 
             </div>
 
@@ -89,7 +86,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": true, //false
+        "is_authenticated": true,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
@@ -101,11 +98,7 @@ export default {
   },
   methods: {
     getUser() {
-<<<<<<< HEAD
       axios.get('/api/user/')
-=======
-      axios.get('http://pmpulecture.herokuapp.com/api/userш/')
->>>>>>> frontend
         .then(response => {
           this.user = response.data
         })
