@@ -8,16 +8,18 @@ import AddMaterials from "./components/AddMaterials";
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
-      component: Programmes
+      component: Programmes,
+      meta: {title: "Пм-Пу"}
     },
     {
       path: '/login',
       component: Login,
+      meta: {title: "Пм-Пу | Вход"}
     },
     {
       path: '/add_materials',
@@ -26,12 +28,22 @@ export default new Router({
     {
       path: '/programme/:progID',
       component: ProgramInfo,
-      props: true
+      props: true,
+      meta: {title: "Пм-Пу| :progID"}
     },
     {
       path: '/lecturer/:lecturerID',
       component: LecturerPage,
-      props: true
+      props: true,
+      meta: {title: "Пм-Пу| Лектор"}
     }
   ]
 })
+
+/*router.beforeEach((to, from, next) => {
+  document.title = to.meta.title
+
+  next()
+});*/
+
+export default router

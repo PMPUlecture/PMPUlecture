@@ -65,6 +65,7 @@ export default {
       })
         .then(response => {
           this.lecturerInfo = response.data[0]
+          document.title = 'ПМ-ПУ | ' + this.lecturerInfo.name
         })
         .catch(error => {
           console.log(error);
