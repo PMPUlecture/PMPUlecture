@@ -234,17 +234,22 @@ export default {
       const str = JSON.stringify(this.material);
       axios.post('/api/material/', str)
         .then((response) => {
-          this.degreeField = ''
-          this.resetField('programField', 'disableField2')
-          this.resetField('semesterField', 'disableField3')
-          this.resetField('subjectField', 'disableField4')
-          this.resetField('lecturerField', 'disableField5')
-          this.resetField('titleField', 'disableField6')
-          this.resetField('linkField', 'disableField7')
-          this.resetField('typeField', 'disableField8')
-          this.disableButton = true
+          if (response.data.status === 'ok') {
+            this.degreeField = ''
+            this.resetField('programField', 'disableField2')
+            this.resetField('semesterField', 'disableField3')
+            this.resetField('subjectField', 'disableField4')
+            this.resetField('lecturerField', 'disableField5')
+            this.resetField('titleField', 'disableField6')
+            this.resetField('linkField', 'disableField7')
+            this.resetField('typeField', 'disableField8')
+            this.disableButton = true
 
-          alert('Успешно отправлено!')
+            alert('Успешно отправлено!')
+          }
+          else{
+            alert(response.data.error)
+          }
         })
         .catch((error) => {
           alert('Ошибка!')
