@@ -78,6 +78,12 @@ class UserDetail(View):
 class MaterialView(View):
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
         data = json.loads(request.body)
         print(data)
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
