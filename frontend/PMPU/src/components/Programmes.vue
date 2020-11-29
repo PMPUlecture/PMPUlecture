@@ -1,7 +1,7 @@
 <template>
   <div>
     <Loader v-if="loading"></Loader>
-      <h3 v-if="progList.bachelor.length" class="display-3 text-center text-white"><span class="badge badge-pill badge-light">Бакалавриат</span></h3>
+      <h2 v-if="progList.bachelor.length" class="display-4 text-center text-white"><span class="badge badge-pill badge-light">Бакалавриат</span></h2>
 
       <div class="w-auto  p-1"></div>
 
@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      progList: {bachelor: [], master: []},
+      progList: {bachelor: [{'name': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 'img_url': 'https://hsto.org/webt/59/e1/14/59e1140d498b7040864280.png', 'id': 1}], master: []},
       loading: true,
     }
   },

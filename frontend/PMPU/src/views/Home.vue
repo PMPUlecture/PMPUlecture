@@ -1,15 +1,62 @@
 <template>
- <!-- id="app" не нужен -->
-    <!-- Image and text -->
+  <div>
+    <!-- Верхняя панель -->
+    <header>
+  <div class="container mb-5">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top mb-5">
+      <router-link class="navbar-brand" to="/"><b>База знаний ПМ-ПУ</b></router-link>
+
+    <!-- Кнопка для выпадающего списка (активируется только на <lg экранах) -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <!-- Форма для авторизированных пользователей -->
+      <div class="mr-auto mt-2 mt-lg-0  d-lg-none d-block">
+        <div v-if="user.is_authenticated" class="d-flex flex-column">
+        <div class="bg-info p-2 rounded d-flex flex-row justify-content-between">
+          <span class="m-auto">Добро пожаловать, <b>{{user.first_name + ' ' + user.last_name}}</b></span>
+          <a href="/account/logout/" class="btn btn-danger">Выйти</a>
+        </div>
+          <router-link :to="'/add_materials'" class="btn btn-outline-light mt-2">
+            Добавить материал
+          </router-link>
+        </div>
+        <!-- Форма для неавторизированных пользователей -->
+        <div v-else class="bg-warning p-2 rounded d-flex flex-row justify-content-between">
+          <span class="m-auto">Вход не выполнен</span>
+          <a class="btn btn-danger" href="/account/login/google-oauth2/"><i class='fab fa-google'></i></a>
+        </div>
+      </div>
+
+      <br>
+      <!-- Полезные ссылки -->
+      <div class="list-group d-lg-none d-block">
+        <a class="list-group-item list-group-item-action" target="blank"  href="https://vk.com/pmpu_news">ПМ-ПУ СМИ</a>
+        <a class="list-group-item list-group-item-action" target="blank"href="https://vk.com/sspmpu">Студсовет ПМ-ПУ</a>
+        <a class="list-group-item list-group-item-action" target="blank"href="#">Студсовет2 ПМ-ПУ</a>
+      </div>
+      <!-- Поиск преподов -->
+      <!--form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form-->
+    </div>
+  </nav>
+  </div>
+    </header>
 
     <div class="container-fluid min-vh-100">
-      <div class="row bg-primary text-white mb-5">
+      <div class="row mb-5"></div>
+
+      <!--div class="row bg-primary text-white mb-5">
         <div class="col m-2">
           <router-link class="stretched-link text-white nostroke " to="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></router-link>
         </div>
-      </div>
+      </div-->
       <div class="row">
-        <div class="col-3">  <!-- левая колонка со ссылками, не меняется -->
+        <div class="col-3 d-none d-lg-block">  <!-- левая колонка со ссылками, не меняется -->
 
             <div class="d-flex flex-column justify-content-between my-sticky-top">
               <div class="card">
@@ -56,14 +103,14 @@
             </div>
 
         </div>
-        <div class="col-9"> <!-- правая колонка, меняется -->
+        <div class="col-lg-9 col"> <!-- правая колонка, меняется -->
 
               <router-view></router-view>
 
         </div>
       </div>
     </div>
-
+  </div>
 </template>
 
 <script>
@@ -84,7 +131,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": false,
+        "is_authenticated": true,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"
@@ -112,6 +159,7 @@ export default {
 </script>
 
 <style>
+
 h1, h2 {
   font-weight: normal;
 }
@@ -123,7 +171,7 @@ h1, h2 {
 .my-sticky-top{
   position: sticky;
   left: 0;
-  top: 3em;
+  top: 7em;
 }
 
 </style>
