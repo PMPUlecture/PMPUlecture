@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('/api/subjects/', {
+      axios.get('https://pmpulecture.herokuapp.com/api/subjects/', {
         params: {
           programme: progID,
           fields: 'term,lecturers'
@@ -70,5 +70,14 @@ export default {
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: black;
 
+}
+
+@media (max-width: 500px) {
+  .progname {
+    font-size: 150%;
+    -webkit-text-stroke: revert;
+    color: #1a252f;
+    font-weight: bold;
+  }
 }
 </style>
