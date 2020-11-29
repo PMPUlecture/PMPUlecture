@@ -1,7 +1,7 @@
 <template>
 
   <div class="shadow card mb-3">
-    <img :src="programme.img_url" class="card-img imgback" alt="...">
+    <img :src="programme.img_url" class=" imgback" alt="...">
     <div class="card-img-overlay d-flex justify-content-end flex-column m-md-3">
       <router-link :to="'programme/'+programme.id" class="stretched-link text-white"><h3
         class="display program-text1 text-white text-of-card">{{ programme.name }}</h3></router-link>
@@ -36,7 +36,8 @@ a:hover {
 
 
 .imgback {
-
+  height: 250px;
+  object-fit: cover;
 
 }
 
