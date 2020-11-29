@@ -19,7 +19,7 @@
           <span class="m-auto">Добро пожаловать, <b>{{user.first_name + ' ' + user.last_name}}</b></span>
           <a href="/account/logout/" class="btn btn-danger">Выйти</a>
         </div>
-          <router-link :to="'/add_materials'" class="btn btn-outline-light mt-2">
+          <router-link :to="'/add_materials'" class="btn btn-outline-light mt-2" data-toggle="collapse" data-target="#navbarTogglerDemo01">
             Добавить материал
           </router-link>
         </div>

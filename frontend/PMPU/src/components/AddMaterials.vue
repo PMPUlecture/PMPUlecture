@@ -1,6 +1,6 @@
 <template>
-  <div class="h-100 d-flex">
-  <div class="card border-dark m-auto mb-3 w-50" style="max-width: 70%">
+  <div class="container">
+  <div class="card border-dark row-cols-1 m-auto" style="max-width: 600px">
     <h5 class="card-header text-center"> Добавление материала </h5>
     <div class="card-body text-dark">
 
@@ -19,11 +19,12 @@
             <option v-for="prog in programs" :value="prog.id"> {{prog.name}} </option>
           </select>
 
-          <div class="row mt-3 ml-1">
+          <div class="row mt-3 ml-1 d-flex justify-content-between">
             <label for="field3" class="col-3 col-form-label"> Семестр </label>
-            <div class="col-2">
+            <div class="col" style="width: 100px">
               <input v-model="semesterField" type="number" class="form-control" id="field3" :disabled="disableField3">
             </div>
+            <div class="col-5 d-sm-block d-none"></div>
           </div>
 
           <select v-model="subjectField" class="form-control mt-3" id="field4" :disabled="disableField4">
