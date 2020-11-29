@@ -4,10 +4,10 @@
       <Loader v-if="loading"></Loader>
     <div v-if="!loading" class="container-fluid">
       <div class="row">
-        <div class="col-3 ">
+        <div class="col-3 d-lg-block d-none">
           <img :src="lecturerInfo.photo" alt="фото" class="w-100">
         </div>
-        <div class="col-7 ">
+        <div class="col-lg-7 col">
           <h2 class="text-center"> {{lecturerInfo.name}} </h2>
 
           <div class="list-group">
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getLecturerInfo(lecturerID) {
-      axios.get('/api/lecturers/', {
+      axios.get('https://pmpulecture.herokuapp.com/api/lecturers/', {
         params: {
           id: lecturerID,
           fields: 'apmath,photo,vk,materials',
@@ -86,7 +86,7 @@ export default {
         })
     },
     getMaterials() {
-      axios.get('/api/lecturers/', {
+      axios.get('https://pmpulecture.herokuapp.com/api/lecturers/', {
         params: {
           id: this.lecturerID,
           fields: 'materials'
