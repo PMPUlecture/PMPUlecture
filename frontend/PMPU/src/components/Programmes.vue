@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     getProgList() {
-      axios.get('https://pmpulecture.herokuapp.com/api/programmes/', {
+      axios.get('/api/programmes/', {
         params: {
           fields: 'img_url'
         }

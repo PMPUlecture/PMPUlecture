@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getLecturerInfo(lecturerID) {
-      axios.get('https://pmpulecture.herokuapp.com/api/lecturers/', {
+      axios.get('/api/lecturers/', {
         params: {
           id: lecturerID,
           fields: 'apmath,photo,vk,materials',
@@ -86,7 +86,7 @@ export default {
         })
     },
     getMaterials() {
-      axios.get('https://pmpulecture.herokuapp.com/api/lecturers/', {
+      axios.get('/api/lecturers/', {
         params: {
           id: this.lecturerID,
           fields: 'materials'
