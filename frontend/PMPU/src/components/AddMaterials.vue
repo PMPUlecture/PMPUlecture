@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
   <div class="card border-dark row-cols-1 m-auto" style="max-width: 600px">
     <h5 class="card-header text-center"> Добавление материала </h5>
     <div class="card-body text-dark">
@@ -32,11 +32,14 @@
             <option v-for="subject in subjects" :value="subject.id"> {{subject.name}} </option>
           </select>
 
-          <select v-model="lecturerField" class="form-control mt-3" id="field5" :disabled="disableField5">
-            <option selected="true" value="" disabled> Лектор </option>
-            <option v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
-          </select>
+          <div class="row ml-0 mr-0">
+            <select v-model="lecturerField" class="form-control mt-3 col" id="field5" :disabled="disableField5">
+              <option selected="true" value="" disabled> Лектор </option>
+              <option v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
+            </select>
 
+              <a class="btn btn-danger col-sm-3 mt-3 ml-sm-3">Нет лектора?</a>
+          </div>
           <input v-model="titleField" class="form-control mt-3" type="text" placeholder="Название" :disabled="disableField6">
 
           <input v-model="linkField" class="form-control mt-3" type="url" placeholder="Ссылка" :disabled="disableField7">
