@@ -188,6 +188,9 @@ class MaterialView(View):
         if request.user.is_authenticated:
             data['author'] = request.user
 
+        if 'year_of_relevance' in data:
+            data['year_of_relevance'] = int(data['year_of_relevance'])
+
         material = Materials.objects.create(**data)
         try:
             material.clean_fields()
@@ -251,11 +254,15 @@ class MaterialView(View):
         if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
             data['link'] = "http://" + data['link']
 
+        if 'year_of_relevance' in data:
+            data['year_of_relevance'] = int(data['year_of_relevance'])
+
         material.name = data['name']
         material.type = data['type']
         material.subject = data['subject']
         material.lecturer = data['lecturer']
         material.link = data['link']
+        material.year_of_relevance = data['year_of_relevance']
 
         try:
             material.clean_fields()

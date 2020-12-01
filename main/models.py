@@ -2,7 +2,7 @@ from django.core.validators import URLValidator
 from django.db import models
 from account.models import User
 
-
+from datetime import datetime
 
 
 class Programme(models.Model):
@@ -108,6 +108,7 @@ class Materials(models.Model):
     link = models.URLField(max_length=256, null=True, validators=[URLValidator,])
     author = models.ForeignKey(User, blank=True, on_delete=models.SET_NULL, null=True)
     last_update = models.DateTimeField(auto_now=True)
+    year_of_relevance = models.IntegerField(default=datetime.now().year)
 
     def __str__(self):
         return self.name
@@ -117,4 +118,5 @@ class Materials(models.Model):
             'id': self.id,
             'name': self.name,
             'link': self.link,
+            'year_of_relevance': self.year_of_relevance,
         }
