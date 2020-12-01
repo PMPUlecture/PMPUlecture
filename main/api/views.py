@@ -4,8 +4,6 @@ from ..models import Lecturer, Subject, Programme, Materials
 from django.core.exceptions import ValidationError
 import json
 
-from django.contrib.auth.models import AnonymousUser, Group
-
 
 def list_of_fields(string: str):
     return string.replace(' ', '').split(',')
@@ -50,12 +48,12 @@ class LecturerView(View):
         return resp
 
     def post(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+        # if not request.user.is_authenticated:
+        #     resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+        #     resp.setdefault('Access-Control-Allow-Origin', '*')
+        #     resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+        #     resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+        #     return resp
 
         data = json.loads(request.body)
         subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
@@ -66,6 +64,13 @@ class LecturerView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
         del data['subjects']
+
+        if not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
+            data['apmath_url'] = "http://" + data['apmath_url']
+        if not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
+            data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
+        if 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+            data['photo_url'] = "http://" + data['photo_url']
 
         new_lecturer = Lecturer.objects.create(**data)
         new_lecturer.subject.set(subjects)
@@ -114,14 +119,15 @@ class LecturerView(View):
             data['apmath_url'] = "http://" + data['apmath_url']
         if not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
             data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
-        if not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+        if 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
             data['photo_url'] = "http://" + data['photo_url']
 
         lecturer.name = data['name']
         lecturer.subject.set(data['subjects'])
         lecturer.apmath_url = data['apmath_url']
         lecturer.vk_discuss_url = data['vk_discuss_url']
-        lecturer.photo_url = data['photo_url']
+        if 'photo_url' in data:
+            lecturer.photo_url = data['photo_url']
 
         try:
             lecturer.clean_fields()
