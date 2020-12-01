@@ -35,7 +35,7 @@ class TermListFilter(admin.SimpleListFilter):
         if not self.value():
             return Lecturer.objects.all()
 
-        return Lecturer.objects.filter(subject__term=int(self.value()))
+        return Lecturer.objects.filter(subject__term=int(self.value())).distinct()
 
 
 @admin.register(Lecturer)
