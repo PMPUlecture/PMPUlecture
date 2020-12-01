@@ -73,13 +73,9 @@ class LecturerView(View):
         try:
             new_lecturer.clean_fields()
         except ValidationError as e:
-            if 'link' in e.message_dict:
-                resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
-            else:
-                resp = JsonResponse({'status': 'error', 'error': e.message_dict})
-                return resp
+            resp = JsonResponse({'status': 'error', 'error': e.message_dict})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -90,7 +86,59 @@ class LecturerView(View):
         return resp
 
     def put(self, request):
-        pass
+        if not request.user.is_authenticated:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        data = json.loads(request.body)
+        lecturer = Lecturer.objects.filter(id=int(data['id'])).first()
+        if not lecturer:
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        data['subjects'] = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
+        if not data['subjects']:
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        if not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
+            data['apmath_url'] = "http://" + data['apmath_url']
+        if not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
+            data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
+        if not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+            data['photo_url'] = "http://" + data['photo_url']
+
+        lecturer.name = data['name']
+        lecturer.subject.set(data['subjects'])
+        lecturer.apmath_url = data['apmath_url']
+        lecturer.vk_discuss_url = data['vk_discuss_url']
+        lecturer.photo_url = data['photo_url']
+
+        try:
+            lecturer.clean_fields()
+        except ValidationError as e:
+            resp = JsonResponse({'status': 'error', 'error': e.message_dict})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        lecturer.save()
+
+        resp = JsonResponse({'status': 'ok'})
+        resp.setdefault('Access-Control-Allow-Origin', '*')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+        return resp
 
 
 class UserDetail(View):
@@ -119,7 +167,7 @@ class MaterialView(View):
         data = json.loads(request.body)
         print(data)
 
-        if len(data['link'].split("://")) == 1:
+        if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
             data['link'] = "http://" + data['link']
 
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
@@ -201,7 +249,7 @@ class MaterialView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        if len(data['link'].split("://")) == 1:
+        if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
             data['link'] = "http://" + data['link']
 
         material.name = data['name']
