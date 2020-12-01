@@ -14,10 +14,36 @@ class MaterialsInline(admin.TabularInline):
     model = Materials
 
 
+class TermListFilter(admin.SimpleListFilter):
+    title = 'term'
+
+    parameter_name = 'term'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('1', '1'),
+            ('2', '2'),
+            ('3', '3'),
+            ('4', '4'),
+            ('5', '5'),
+            ('6', '6'),
+            ('7', '7'),
+            ('8', '8'),
+        )
+
+    def queryset(self, request, queryset):
+        if not self.value():
+            return Lecturer.objects.all()
+
+        term = int(self.value())
+        subjects = Subject.objects.filter(term=term)
+        return Lecturer.objects.filter(subject__in=subjects)
+
+
 @admin.register(Lecturer)
 class LecturerAdmin(admin.ModelAdmin):
     list_display = ('name', 'display_subjects')
-    list_filter = ('subject',)
+    list_filter = ('subject', TermListFilter)
 
     fieldsets = (
         (None, {
