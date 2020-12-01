@@ -51,15 +51,39 @@ class LecturerView(View):
 
     def post(self, request):
         data = json.loads(request.body)
-        subject = Subject.objects.filter(id__in=list(map(int, data['subject'])))
-        del data['subject']
+        subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
+        if not subjects:
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+        del data['subjects']
 
         new_lecturer = Lecturer.objects.create(**data)
-        new_lecturer.subject.set(subject)
+        new_lecturer.subject.set(subjects)
+
+        try:
+            new_lecturer.clean_fields()
+        except ValidationError as e:
+            if 'link' in e.message_dict:
+                resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
+            else:
+                resp = JsonResponse({'status': 'error', 'error': e.message_dict})
+                return resp
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
         resp = JsonResponse({'status': 'ok'}, safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return resp
+
+    def put(self, request):
+        pass
 
 
 class UserDetail(View):
