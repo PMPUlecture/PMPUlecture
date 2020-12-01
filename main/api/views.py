@@ -81,7 +81,7 @@ class MaterialView(View):
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -95,7 +95,7 @@ class MaterialView(View):
         if not data['subject']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -103,16 +103,16 @@ class MaterialView(View):
         if not data['lecturer']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
         if request.user.is_authenticated:
             data['author'] = request.user
 
-        metarial = Materials.objects.create(**data)
+        material = Materials.objects.create(**data)
         try:
-            metarial.clean_fields()
+            material.clean_fields()
         except ValidationError as e:
             if 'link' in e.message_dict:
                 resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
@@ -120,13 +120,13 @@ class MaterialView(View):
                 resp = JsonResponse({'status': 'error', 'error': e.message_dict})
                 return resp
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
         resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return resp
 
@@ -134,7 +134,7 @@ class MaterialView(View):
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -143,14 +143,14 @@ class MaterialView(View):
         if not material:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such material'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
         if material.author != request.user:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -158,7 +158,7 @@ class MaterialView(View):
         if not data['subject']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -166,7 +166,7 @@ class MaterialView(View):
         if not data['lecturer']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -178,11 +178,57 @@ class MaterialView(View):
         material.subject = data['subject']
         material.lecturer = data['lecturer']
         material.link = data['link']
+
+        try:
+            material.clean_fields()
+        except ValidationError as e:
+            if 'link' in e.message_dict:
+                resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
+            else:
+                resp = JsonResponse({'status': 'error', 'error': e.message_dict})
+                return resp
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
         material.save()
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+        return resp
+
+    def delete(self, request):
+        if not request.user.is_authenticated:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        data = json.loads(request.body)
+        material = Materials.objects.filter(id=int(data['id'])).first()
+        if not material:
+            resp = JsonResponse({'status': 'error', 'error': 'there is no such material'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        if material.author != request.user:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
+        material.delete()
+
+        resp = JsonResponse({'status': 'ok'})
+        resp.setdefault('Access-Control-Allow-Origin', '*')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
         resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return resp
 
