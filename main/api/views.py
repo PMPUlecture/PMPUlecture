@@ -50,12 +50,19 @@ class LecturerView(View):
         return resp
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
         data = json.loads(request.body)
         subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
         if not subjects:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
         del data['subjects']
