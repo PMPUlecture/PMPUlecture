@@ -4,7 +4,8 @@ from ..models import Lecturer, Subject, Programme, Materials
 from django.core.exceptions import ValidationError
 import json
 
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, Group
+
 
 def list_of_fields(string: str):
     return string.replace(' ', '').split(',')
@@ -68,7 +69,7 @@ class UserDetail(View):
             response.update(email=request.user.email,
                             first_name=request.user.first_name,
                             last_name=request.user.last_name,
-                            is_admin= True if request.user.groups.last() else False),
+                            is_admin=request.user.groups.filter(name='admin').exists()),
 
         resp = JsonResponse(response)
         resp.setdefault('Access-Control-Allow-Origin', '*')
