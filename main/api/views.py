@@ -165,7 +165,6 @@ class MaterialView(View):
             return resp
 
         data = json.loads(request.body)
-        print(data)
 
         if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
             data['link'] = "http://" + data['link']
@@ -361,18 +360,43 @@ class SubjectsView(View):
             return resp
 
     def post(self, request):
+        if not request.user.is_authenticated:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+
         data = json.loads(request.body)
-        data['programme'] = Programme.objects.filter(pk=data['programme']).first()
+        data['programme'] = Programme.objects.filter(id=data['programme']).first()
         if not data['programme']:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such programme'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
         data['term'] = int(data['term'])
+        if data['term'] not in range(1, 9):
+            resp = JsonResponse({'status': 'error', 'error': 'term should be between 1 and 8'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
-        Subject.objects.create(**data)
+        new_subject = Subject.objects.create(**data)
+        try:
+            new_subject.clean_fields()
+        except ValidationError as e:
+            resp = JsonResponse({'status': 'error', 'error': e.message_dict})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
+        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return resp
 
 
