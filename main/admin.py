@@ -35,9 +35,7 @@ class TermListFilter(admin.SimpleListFilter):
         if not self.value():
             return Lecturer.objects.all()
 
-        term = int(self.value())
-        subjects = Subject.objects.filter(term=term)
-        return Lecturer.objects.filter(subject__in=subjects)
+        return Lecturer.objects.filter(subject__term=int(self.value()))
 
 
 @admin.register(Lecturer)
@@ -64,5 +62,3 @@ class PregrammeAdmin(admin.ModelAdmin):
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'subject', 'lecturer')
     list_filter = ('type', 'subject', 'lecturer', 'last_update')
-
-
