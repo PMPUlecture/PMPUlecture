@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.core.validators import URLValidator
 from django.http import JsonResponse
 from django.views import View
 from ..models import Lecturer, Subject, Programme, Materials
@@ -174,9 +175,16 @@ class MaterialView(View):
             return resp
 
         data = json.loads(request.body)
-
-        if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
-            data['link'] = "http://" + data['link']
+        validator = URLValidator()
+        try:
+            validator(data.get('link'))
+        except ValidationError as e:
+            print(e)
+            resp = JsonResponse({'status': 'error', 'error': e.message})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
         if not data['subject']:
@@ -201,18 +209,6 @@ class MaterialView(View):
             data['year_of_relevance'] = int(data['year_of_relevance'])
 
         material = Materials.objects.create(**data)
-        try:
-            material.clean_fields()
-        except ValidationError as e:
-            if 'link' in e.message_dict:
-                resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
-            else:
-                resp = JsonResponse({'status': 'error', 'error': e.message_dict})
-                return resp
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
