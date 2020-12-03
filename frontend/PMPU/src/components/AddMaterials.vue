@@ -1,4 +1,5 @@
 <template>
+<div>
   <div class="container-fluid">
   <div class="card border-dark row-cols-1 m-auto" style="max-width: 600px">
     <h5 class="card-header text-center"> Добавление материала </h5>
@@ -63,6 +64,21 @@
     </div>
   </div>
   </div>
+  <div aria-live="polite"  aria-atomic="true" class="d-flex justify-content-center align-items-center" style="position: fixed;
+top: 100px; right: 50px; z-index: 10">
+    <div role="alert" id="error2" aria-live="assertive" aria-atomic="true" class="toast" data-delay="1500">
+      <div class="toast-header">
+
+        <strong class="mr-auto">{{toasts.title}}</strong>
+      </div>
+      <div class="toast-body">
+        {{toasts.body}}
+      </div>
+    </div>
+  </div>
+
+</div>
+
 </template>
 
 <script>
@@ -100,6 +116,11 @@ export default {
         type: '',
         lecturer: '',
         link: ''
+      },
+
+      toasts: {
+        title: "",
+        body: ""
       }
     }
   },
@@ -236,6 +257,7 @@ export default {
       this.material.link = this.linkField
 
       const str = JSON.stringify(this.material);
+
       axios.post('/api/material/', str)
         .then((response) => {
           if (response.data.status === 'ok') {
@@ -249,15 +271,20 @@ export default {
             this.resetField('typeField', 'disableField8')
             this.disableButton = true
 
-            alert('Успешно отправлено!')
+            this.toasts.title = "Успех";
+            this.toasts.body = "Успешно отправлено!"
+            $('.toast').toast('show');
           }
           else{
-            alert(response.data.error)
+            this.toasts.title = "Error";
+            this.toasts.body = response.data.error
+            $('.toast').toast('show');
           }
         })
         .catch((error) => {
-          alert('Ошибка!')
-          console.log(error);
+          this.toasts.title = "Ошибка!";
+          this.toasts.body = "Что-то пошло не так..."
+          $('.toast').toast('show');
         });
     }
   }

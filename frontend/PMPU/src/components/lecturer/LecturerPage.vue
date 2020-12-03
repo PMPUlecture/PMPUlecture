@@ -10,7 +10,7 @@
         <div class="col-lg-7 col">
           <h2 class="text-center"> {{lecturerInfo.name}} </h2>
 
-          <div class="list-group">
+          <div class="list-group text-break">
             <li class="list-group-item list-group-item-primary">Страница преподавателя на сайте факультета</li>
             <a :href="lecturerInfo.apmath" target="blank" class="list-group-item list-group-item-action"> {{ lecturerInfo.apmath }} </a>
             <li class="list-group-item list-group-item-primary">Обсуждение и отзывы в группе ВК</li>

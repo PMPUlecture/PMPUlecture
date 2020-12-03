@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      progList: {bachelor: [{'name': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 'img_url': 'https://hsto.org/webt/59/e1/14/59e1140d498b7040864280.png', 'id': 1}], master: []},
+      progList: {bachelor: [], master: []},
       loading: true,
     }
   },

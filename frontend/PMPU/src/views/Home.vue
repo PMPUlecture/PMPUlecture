@@ -37,11 +37,6 @@
         <a class="list-group-item list-group-item-action" target="blank"href="https://vk.com/sspmpu">Студсовет ПМ-ПУ</a>
         <a class="list-group-item list-group-item-action" target="blank"href="#">Студсовет2 ПМ-ПУ</a>
       </div>
-      <!-- Поиск преподов -->
-      <!--form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form-->
     </div>
   </nav>
   </div>
@@ -50,11 +45,6 @@
     <div class="container-fluid min-vh-100">
       <div class="row mb-5"></div>
 
-      <!--div class="row bg-primary text-white mb-5">
-        <div class="col m-2">
-          <router-link class="stretched-link text-white nostroke " to="/"><h1 class="text-center display-5">БАЗА знаний ПМ-ПУ</h1></router-link>
-        </div>
-      </div-->
       <div class="row">
         <div class="col-3 d-none d-lg-block">  <!-- левая колонка со ссылками, не меняется -->
 
@@ -131,7 +121,7 @@ export default {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": true,
+        "is_authenticated": false,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
         "last_name": "Lisov"

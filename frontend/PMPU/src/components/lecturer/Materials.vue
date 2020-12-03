@@ -1,13 +1,13 @@
 <template>
   <div>
 
-  <h2 class="text-center"> {{material.name}} </h2>
+  <h3 class="text-center text-break"> {{material.name}} </h3>
 
 
     <div class="row">
       <div class="col">
         <Abstracts :sources="material.source[0].abstract" />
-      </div>
+      </div>S
       <div class="col">
         <Questions :sources="material.source[0].questions" />
       </div>
