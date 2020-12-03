@@ -5,16 +5,16 @@
 
 
     <div class="row">
-      <div class="col">
+      <div class="col" v-if="material.source[0].abstract.length">
         <Abstracts :sources="material.source[0].abstract" />
-      </div>S
-      <div class="col">
+      </div>
+      <div class="col" v-if="material.source[0].questions.length">
         <Questions :sources="material.source[0].questions" />
       </div>
-      <div class="col">
+      <div class="col" v-if="material.source[0].test.length">
         <Tests :sources="material.source[0].test" />
       </div>
-      <div class="col">
+      <div class="col" v-if="material.source[0].other.length">
         <Other :sources="material.source[0].other" />
       </div>
     </div>
