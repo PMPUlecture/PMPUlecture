@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views import View
 from ..models import Lecturer, Subject, Programme, Materials
@@ -48,12 +49,12 @@ class LecturerView(View):
         return resp
 
     def post(self, request):
-        # if not request.user.is_authenticated:
-        #     resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-        #     resp.setdefault('Access-Control-Allow-Origin', '*')
-        #     resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-        #     resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        #     return resp
+        if not request.user.is_authenticated:
+            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
         data = json.loads(request.body)
         subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
@@ -107,27 +108,29 @@ class LecturerView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        data['subjects'] = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
-        if not data['subjects']:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+        if request.user.groups.filter(name='admin').exists(): # Изменение всех полей доступно только админам
+            if data.get('apmath_url') and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
+                data['apmath_url'] = "http://" + data['apmath_url']
+            if data.get('vk_discuss_url') and not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
+                data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
+            if data.get('photo_url') and 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+                data['photo_url'] = "http://" + data['photo_url']
 
-        if not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
-            data['apmath_url'] = "http://" + data['apmath_url']
-        if not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
-            data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
-        if 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
-            data['photo_url'] = "http://" + data['photo_url']
+            lecturer.name = data.get('name') or lecturer.name
 
-        lecturer.name = data['name']
-        lecturer.subject.set(data['subjects'])
-        lecturer.apmath_url = data['apmath_url']
-        lecturer.vk_discuss_url = data['vk_discuss_url']
-        if 'photo_url' in data:
-            lecturer.photo_url = data['photo_url']
+            lecturer.apmath_url = data.get('apmath_url') or lecturer.apmath_url
+            lecturer.vk_discuss_url = data.get('vk_discuss_url') or lecturer.vk_discuss_url
+            lecturer.photo_url = data.get('photo_url') or lecturer.photo_url
+
+        if data.get('subjects'):
+            try:
+                lecturer.subject.add(*data['subjects'])
+            except IntegrityError:
+                resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
+                resp.setdefault('Access-Control-Allow-Origin', '*')
+                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+                return resp
 
         try:
             lecturer.clean_fields()
