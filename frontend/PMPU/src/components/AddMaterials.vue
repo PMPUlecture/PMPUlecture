@@ -45,7 +45,7 @@
           <input v-model="linkField" class="form-control mt-3" type="url" placeholder="Ссылка" :disabled="disableField7">
 
           <div class="row mt-3 ml-1 d-flex justify-content-between">
-            <label for="field9" class="col-3 col-form-label"> Семестр </label>
+            <label for="field9" class="col-3 col-form-label"> Год </label>
             <div class="col" >
               <input style="width: 100px" v-model="year_of_relevance" type="number" class="form-control" id="field9" :disabled="disableField9">
             </div>
