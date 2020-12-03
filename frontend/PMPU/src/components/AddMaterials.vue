@@ -22,10 +22,9 @@
 
           <div class="row mt-3 ml-1 d-flex justify-content-between">
             <label for="field3" class="col-3 col-form-label"> Семестр </label>
-            <div class="col" style="width: 100px">
-              <input v-model="semesterField" type="number" class="form-control" id="field3" :disabled="disableField3">
+            <div class="col">
+              <input  style="width: 100px" v-model="semesterField" type="number" class="form-control" id="field3" :disabled="disableField3">
             </div>
-            <div class="col-5 d-sm-block d-none"></div>
           </div>
 
           <select v-model="subjectField" class="form-control mt-3" id="field4" :disabled="disableField4">
@@ -44,6 +43,14 @@
           <input v-model="titleField" class="form-control mt-3" type="text" placeholder="Название" :disabled="disableField6">
 
           <input v-model="linkField" class="form-control mt-3" type="url" placeholder="Ссылка" :disabled="disableField7">
+
+          <div class="row mt-3 ml-1 d-flex justify-content-between">
+            <label for="field9" class="col-3 col-form-label"> Семестр </label>
+            <div class="col" >
+              <input style="width: 100px" v-model="year_of_relevance" type="number" class="form-control" id="field9" :disabled="disableField9">
+            </div>
+
+          </div>
 
           <select v-model="typeField" class="form-control mt-3" id="field8" :disabled="disableField8">
             <option selected="true" value="" disabled> Тип материала </option>
@@ -95,6 +102,7 @@ export default {
       disableField6: true,
       disableField7: true,
       disableField8: true,
+      disableField9: true,
       disableButton: true,
 
       degreeField: '',
@@ -105,6 +113,7 @@ export default {
       titleField: '',
       linkField: '',
       typeField: '',
+      year_of_relevance: new Date().getFullYear(),
 
       programs: null,
       subjects: null,
@@ -134,6 +143,7 @@ export default {
       this.resetField('titleField', 'disableField6')
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
+      this.disableField9 = true
       this.disableButton = true
 
       if (this.programField != '') {
@@ -151,6 +161,8 @@ export default {
         this.disableField6 = false
         this.disableField7 = false
         this.disableField8 = false
+        this.disableField9 = false
+
       }
     },
     titleField: 'unableButton',
@@ -170,6 +182,7 @@ export default {
       this.resetField('titleField', 'disableField6')
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
+      this.disableField9 = true
       this.disableButton = true
 
       if (this.degreeField != '') {
@@ -196,6 +209,7 @@ export default {
       this.resetField('titleField', 'disableField6')
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
+      this.disableField9 = true
       this.disableButton = true
 
       if (this.semesterField != '') {
@@ -221,6 +235,7 @@ export default {
       this.resetField('titleField', 'disableField6')
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
+      this.disableField9 = true
       this.disableButton = true
 
       if (this.subjectField != '') {
@@ -255,6 +270,7 @@ export default {
       this.material.type = this.typeField
       this.material.lecturer = this.lecturerField
       this.material.link = this.linkField
+      this.material.year_of_relevance = this.year_of_relevance
 
       const str = JSON.stringify(this.material);
 
@@ -269,6 +285,7 @@ export default {
             this.resetField('titleField', 'disableField6')
             this.resetField('linkField', 'disableField7')
             this.resetField('typeField', 'disableField8')
+            this.disableField9 = true
             this.disableButton = true
 
             this.toasts.title = "Успех";
