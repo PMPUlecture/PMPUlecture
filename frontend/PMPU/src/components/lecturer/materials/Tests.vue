@@ -5,17 +5,17 @@
       <div class="card-body">
         <!-- <h5 class="card-title">Light card title</h5> -->
         <!-- <p class="card-text"> {{this.sources}} </p> -->
-        <div v-for="source in this.sources">
-          <a target="_blank" :href="source.link" > {{source.name}} </a>
-        </div>
+        <MaterialLink v-for="source in this.sources" :source="source"></MaterialLink>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import MaterialLink from "./MaterialLink";
 export default {
   name: "Tests",
+  components: {MaterialLink},
   props: {
     sources: {
       type: Object,

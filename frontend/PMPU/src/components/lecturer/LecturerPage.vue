@@ -86,7 +86,7 @@ export default {
         })
     },
     getMaterials() {
-      axios.get('/api/lecturers/', {
+      axios.get('http://127.0.0.1:8000/api/lecturers/', {
         params: {
           id: this.lecturerID,
           fields: 'materials'
