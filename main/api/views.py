@@ -96,8 +96,9 @@ class LecturerView(View):
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            resp.setdefault('Access-Control-Allow-Credentials', 'true')
             return resp
 
         data = json.loads(request.body)
@@ -105,7 +106,7 @@ class LecturerView(View):
         if not lecturer:
             resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -129,7 +130,7 @@ class LecturerView(View):
             except IntegrityError:
                 resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
                 resp.setdefault('Access-Control-Allow-Origin', '*')
-                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+                resp.setdefault('Access-Control-Allow-Methods', 'PUT')
                 resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
                 return resp
 
@@ -138,7 +139,7 @@ class LecturerView(View):
         except ValidationError as e:
             resp = JsonResponse({'status': 'error', 'error': e.message_dict})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
@@ -146,7 +147,7 @@ class LecturerView(View):
 
         resp = JsonResponse({'status': 'ok'})
         resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+        resp.setdefault('Access-Control-Allow-Methods', 'PUT')
         resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return resp
 
@@ -332,7 +333,10 @@ class SubjectsView(View):
         lecturer :id
         term :int
         programme :id
+        id :id
         """
+        if request.GET.get("id"):
+            self.subjects = self.subjects.filter(pk=request.GET.get("id"))
         if request.GET.get('lecturer'):
             self.subjects = self.subjects.filter(lecturer=request.GET.get('lecturer'))
         if request.GET.get('term'):

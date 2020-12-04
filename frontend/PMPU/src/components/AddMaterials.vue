@@ -1,5 +1,37 @@
 <template>
 <div>
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Добавление лектора</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body d-flex flex-column">
+          <p><b>Выберете лектора, который ведёт данный предмет:</b></p>
+          <p>{{subjectInformation.name}} на программе {{subjectInformation.programme}}</p>
+
+          <label>
+            <select v-model="subjectInformation.currentLecturer" class="form-control">
+
+              <option v-for="lecturer in this.subjectInformation.allLecturers" :value="lecturer.id">{{lecturer.name}}</option>
+            </select>
+          </label>
+
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+          <div id="action">
+            <button type="button" class="btn btn-primary" v-on:click="put_lecturer">Добавить лектора</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container-fluid">
   <div class="card border-dark row-cols-1 m-auto" style="max-width: 600px">
     <h5 class="card-header text-center"> Добавление материала </h5>
@@ -38,7 +70,7 @@
               <option v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
             </select>
 
-              <a class="btn btn-danger col-sm-3 mt-3 ml-sm-3">Нет лектора?</a>
+              <button data-toggle="modal" type="button" data-target="#staticBackdrop" class="btn btn-danger col-sm-3 mt-3 ml-sm-3" v-on:click="get_subject_info">Нет лектора?</button>
           </div>
           <input v-model="titleField" class="form-control mt-3" type="text" placeholder="Название" :disabled="disableField6">
 
@@ -130,6 +162,13 @@ export default {
       toasts: {
         title: "",
         body: ""
+      },
+
+      subjectInformation: {
+        name: '',
+        programme: '',
+        allLecturers: [],
+        currentLecturer: '',
       }
     }
   },
@@ -303,6 +342,49 @@ export default {
           this.toasts.body = "Что-то пошло не так..."
           $('.toast').toast('show');
         });
+    },
+
+    get_subject_info(){
+      axios.get('/api/subjects/', {
+        params:{
+          id: this.subjectField,
+          fields: 'programme'
+        }
+      })
+      .then((response => {
+        this.subjectInformation.name = response.data.subjects[0].name
+        this.subjectInformation.programme = response.data.subjects[0].programme.name
+      }))
+      axios.get('/api/lecturers/')
+      .then((response => {
+        this.subjectInformation.allLecturers = response.data
+      }))
+    },
+
+    put_lecturer(){
+      if (this.subjectInformation.currentLecturer !== '') {
+        axios.put('/api/lecturers/', {
+          id: this.subjectInformation.currentLecturer,
+          subjects: [this.subjectField]
+        })
+          .then((response) => {
+            if (response.data.status === 'ok') {
+              this.toasts.title = "Добавлено";
+              this.toasts.body = "Преподаватель успешно добавлен!"
+              $('.toast').toast('show');
+              $('#staticBackdrop').modal('hide');
+            }
+            else{
+              this.toasts.title = "Ошибка";
+              this.toasts.body = "Permission denied!"
+              $('.toast').toast('show');
+              $('#staticBackdrop').modal('hide');
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     }
   }
 }
