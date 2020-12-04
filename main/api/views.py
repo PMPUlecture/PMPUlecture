@@ -42,7 +42,6 @@ class LecturerView(View):
         is_vk = "vk" in fields
 
         id_subject = request.GET.get('id_subject_for_material') or None
-        print(id_subject)
 
         resp = JsonResponse([lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
                                             photo=is_photo, vk=is_vk, id_subject_for_material=id_subject) for lector in self.lecturers], safe=False)
@@ -180,7 +179,6 @@ class MaterialView(View):
         try:
             validator(data.get('link'))
         except ValidationError as e:
-            print(e)
             resp = JsonResponse({'status': 'error', 'error': e.message})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
@@ -234,7 +232,7 @@ class MaterialView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        if material.author != request.user:
+        if material.author != request.user or not user.groups.filter(name='admin').exists():
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
