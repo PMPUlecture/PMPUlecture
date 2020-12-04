@@ -32,11 +32,7 @@
 
       <br>
       <!-- Полезные ссылки -->
-      <div class="list-group d-lg-none d-block">
-        <a class="list-group-item list-group-item-action" target="blank"  href="https://vk.com/pmpu_news">ПМ-ПУ СМИ</a>
-        <a class="list-group-item list-group-item-action" target="blank"href="https://vk.com/sspmpu">Студсовет ПМ-ПУ</a>
-        <a class="list-group-item list-group-item-action" target="blank"href="#">Студсовет2 ПМ-ПУ</a>
-      </div>
+        <UsefulLinks class="list-group d-lg-none d-block"></UsefulLinks>
     </div>
   </nav>
   </div>
@@ -51,16 +47,30 @@
             <div class="d-flex flex-column justify-content-between my-sticky-top">
               <div class="card">
                 <div class="card-body">
-                <div class="list-group list-group-flush">
-                  <a class="list-group-item list-group-item-action" target="blank"  href="https://vk.com/pmpu_news">ПМ-ПУ СМИ</a>
-                  <a class="list-group-item list-group-item-action" target="blank"href="https://vk.com/sspmpu">Студсовет ПМ-ПУ</a>
-                  <a class="list-group-item list-group-item-action" target="blank"href="#">Студсовет2 ПМ-ПУ</a>
-                </div>
+                  <UsefulLinks class="list-group list-group-flush"></UsefulLinks>
                 </div>
               </div>
 
 
-                <template v-if="user.is_authenticated">
+              <template v-if="user.is_authenticated && user.is_admin">
+                <div class="card text-white bg-success mt-3 mb-3">
+                  <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
+                  <div class="card-body">
+                    <h4 class="card-title">Вы являетесь администратором</h4>
+                    <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
+
+                    <div class="d-flex justify-content-between">
+                      <router-link :to="'/add_materials'">
+                        <button class="btn btn-outline-primary">Добавить </button>
+                      </router-link>
+                      <a href="/account/logout/" class="btn btn-danger">Выйти</a>
+                    </div>
+                  </div>
+                </div>
+
+              </template>
+
+                <template v-else-if="user.is_authenticated && !user.is_admin">
                   <div class="card text-white bg-info mt-3 mb-3">
                     <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
                       <div class="card-body">
@@ -90,6 +100,18 @@
                   </div>
                 </template>
 
+              <!-- Блок для багов -->
+                <div class="card bg-light mt-3 mb-3">
+                  <div class="card-body">
+                    <h4 class="card-title">Нашли баг?</h4>
+                    <p class="card-text">Мы будем очень признательны, если вы сообщите нам о найденых недочётах.</p>
+                    <a class="btn text-white text-decoration-none" style="background-color: #4a76a8"
+                       href="https://vk.me/kirilllisov" target="_blank"><i class="fab fa-vk"></i> Написать</a>
+
+                  </div>
+                </div>
+              <!-- ------------ -->
+
             </div>
 
         </div>
@@ -108,23 +130,26 @@ import Programmes from '../components/Programmes';
 import ProgramInfo from '../components/ProgramInfo';
 import Login from '../components/Login.vue';
 import axios from "axios";
+import UsefulLinks from "./UsefulLinks";
 
 export default {
   //name: 'App',
   components: {
     Login,
     Programmes,
-    ProgramInfo
+    ProgramInfo,
+    UsefulLinks
   },
   data() {
     return {
       state: 'list',
       progName: null,
       user: {
-        "is_authenticated": true,
+        "is_authenticated": false,
         "email": "ffff@sdsd",
         "first_name": "Kirill",
-        "last_name": "Lisov"
+        "last_name": "Lisov",
+        "is_admin": true
       },
     }
   },

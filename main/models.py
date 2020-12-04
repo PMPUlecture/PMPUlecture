@@ -51,7 +51,7 @@ class Lecturer(models.Model):
     subject = models.ManyToManyField(Subject, null=True)
     apmath_url = models.URLField(max_length=256, null=True)
     vk_discuss_url = models.URLField(max_length=256, null=True)
-    photo_url = models.URLField(max_length=256, default='https://lh3.googleusercontent.com/proxy/TVM3xpx4lmNgijx4Lq5x0zTAA7hC_eVNU-BlThVBvmnxdKBO8MXFOPnU5QjQIsOj22SGH2AmVAbEBkFuOSWEl13wbw')
+    photo_url = models.URLField(max_length=256, default='https://sun9-68.userapi.com/impf/HyenmwTQQ1fWW0OszQm_mih7lYpbLZ0NxveoJQ/NEYM96WpZVw.jpg?size=512x512&quality=96&proxy=1&sign=62af85c2f2a71ab9252ea738532a87be')
 
     def as_dict(self, *, subjects: bool = False, apmath: bool = False, photo: bool = False,
                 vk: bool = False,
