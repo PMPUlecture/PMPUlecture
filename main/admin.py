@@ -60,5 +60,5 @@ class PregrammeAdmin(admin.ModelAdmin):
 
 @admin.register(Materials)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'subject', 'lecturer')
-    list_filter = ('type', 'subject', 'lecturer', 'last_update')
+    list_display = ('name', 'type', 'subject', 'lecturer', 'last_update', 'author')
+    list_filter = ('type', 'subject', 'lecturer')
