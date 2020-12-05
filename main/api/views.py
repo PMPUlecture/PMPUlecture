@@ -68,9 +68,9 @@ class LecturerView(View):
                 return resp
             del data['subjects']
 
-        if not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
+        if 'apmath_url' in data and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
             data['apmath_url'] = "http://" + data['apmath_url']
-        if not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
+        if 'vk_discuss_url' in data and not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
             data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
         if 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
             data['photo_url'] = "http://" + data['photo_url']
