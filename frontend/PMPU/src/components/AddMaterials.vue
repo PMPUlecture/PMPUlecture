@@ -70,7 +70,7 @@
               <option v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
             </select>
 
-              <button data-toggle="modal" type="button" data-target="#staticBackdrop" class="btn btn-danger col-sm-3 mt-3 ml-sm-3" v-on:click="get_subject_info">Нет лектора?</button>
+              <button data-toggle="modal" type="button" data-target="#staticBackdrop" class="btn btn-danger col-sm-3 mt-3 ml-sm-3" v-on:click="get_subject_info" :disabled="disableField5">Нет лектора?</button>
           </div>
           <input v-model="titleField" class="form-control mt-3" type="text" placeholder="Название" :disabled="disableField6">
 
@@ -373,6 +373,7 @@ export default {
               this.toasts.body = "Преподаватель успешно добавлен!"
               $('.toast').toast('show');
               $('#staticBackdrop').modal('hide');
+              this.getLecturers()
             }
             else{
               this.toasts.title = "Ошибка";

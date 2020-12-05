@@ -34,6 +34,8 @@ class LecturerView(View):
             resp.setdefault('Access-Control-Allow-Origin', '*')
             return resp
 
+        self.lecturers = self.lecturers.order_by('name')
+
         fields = list_of_fields(request.GET.get("fields")) if request.GET.get("fields") else []
         is_subjects = "subjects" in fields
         is_materials = "materials" in fields
