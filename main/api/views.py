@@ -60,6 +60,7 @@ class LecturerView(View):
 
         data = json.loads(request.body)
         
+        subjects = None
         if 'subjects' in data:
             subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
             if not subjects:
@@ -78,7 +79,7 @@ class LecturerView(View):
             data['photo_url'] = "http://" + data['photo_url']
 
         new_lecturer = Lecturer.objects.create(**data)
-        if 'subjects' in data:
+        if subjects:
             new_lecturer.subject.set(subjects)
 
         try:
