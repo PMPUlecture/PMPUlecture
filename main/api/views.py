@@ -49,22 +49,24 @@ class LecturerView(View):
         return resp
 
     def post(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+#         if not request.user.is_authenticated:
+#             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+#             resp.setdefault('Access-Control-Allow-Origin', '*')
+#             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+#             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+#             return resp
 
         data = json.loads(request.body)
-        subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
-        if not subjects:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-        del data['subjects']
+        
+        if 'subjects' in data:
+            subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
+            if not subjects:
+                resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
+                resp.setdefault('Access-Control-Allow-Origin', '*')
+                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+                return resp
+            del data['subjects']
 
         if not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
             data['apmath_url'] = "http://" + data['apmath_url']
@@ -74,7 +76,8 @@ class LecturerView(View):
             data['photo_url'] = "http://" + data['photo_url']
 
         new_lecturer = Lecturer.objects.create(**data)
-        new_lecturer.subject.set(subjects)
+        if 'subjects' in data:
+            new_lecturer.subject.set(subjects)
 
         try:
             new_lecturer.clean_fields()
