@@ -57,6 +57,13 @@ class LecturerView(View):
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
+        
+        if request.user.groups.filter(name='black list').exists():
+            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
         data = json.loads(request.body)
         
@@ -104,6 +111,13 @@ class LecturerView(View):
             resp.setdefault('Access-Control-Allow-Methods', 'PUT')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             resp.setdefault('Access-Control-Allow-Credentials', 'true')
+            return resp
+        
+        if request.user.groups.filter(name='black list').exists():
+            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
         data = json.loads(request.body)
@@ -179,6 +193,13 @@ class MaterialView(View):
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
+        
+        if request.user.groups.filter(name='black list').exists():
+            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
 
         data = json.loads(request.body)
         validator = URLValidator()
@@ -224,6 +245,13 @@ class MaterialView(View):
     def put(self, request):
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+        
+        if request.user.groups.filter(name='black list').exists():
+            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
@@ -298,6 +326,13 @@ class MaterialView(View):
     def delete(self, request):
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+        
+        if request.user.groups.filter(name='black list').exists():
+            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
@@ -383,7 +418,14 @@ class SubjectsView(View):
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+            return resp
+        
+        if request.user.groups.filter(name='black list').exists():
+            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
+            resp.setdefault('Access-Control-Allow-Origin', '*')
+            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
