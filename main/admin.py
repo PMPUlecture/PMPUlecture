@@ -42,6 +42,7 @@ class TermListFilter(admin.SimpleListFilter):
 class LecturerAdmin(admin.ModelAdmin):
     list_display = ('name', 'display_subjects')
     list_filter = ('subject', TermListFilter)
+    ordering = ('name',)
 
     fieldsets = (
         (None, {
