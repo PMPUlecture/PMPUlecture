@@ -312,7 +312,7 @@ class MaterialView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        if material.author != request.user:
+        if material.author != request.user or not user.groups.filter(name='admin').exists():
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
