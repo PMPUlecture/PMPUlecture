@@ -69,7 +69,7 @@ class Lecturer(models.Model):
         if vk:
             output['vk_discuss_url'] = self.vk_discuss_url
         if materials:
-            all_materials = Materials.objects.filter(lecturer=self)
+            all_materials = Materials.objects.filter(lecturer=self).order_by('year_of_relevance').reverse()
             output['materials'] = list()
             if id_subject_for_material:
                 subjects = Subject.objects.filter(lecturer=self, id = id_subject_for_material)
