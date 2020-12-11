@@ -1,6 +1,25 @@
 <template>
 
   <div>
+    <!-- MODAL -->
+    <div class="modal fade" id="modal_for_material" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Удалить материал {{materialForDelete.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+            <button type="button" class="btn btn-danger" v-on:click="deleteMaterial">Да</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
       <Loader v-if="loading"></Loader>
     <div v-if="!loading" class="container-fluid">
       <div class="row">
@@ -27,6 +46,7 @@
         :material="material"
         :subjectID="subjID"
         :lecturerID="lecturerID"
+        v-on:remove="openModal($event)"
       />
       <div class="row">
         <button id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
@@ -57,6 +77,10 @@ export default {
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
       subjectID: this.$route.query.subjectID,
       loading: true,
+      materialForDelete:{
+        id: '',
+        name: ''
+      }
     }
   },
   created() {
@@ -68,6 +92,25 @@ export default {
     this.getLecturerInfo(this.lecturerID);
   },
   methods: {
+    openModal(material){
+      this.materialForDelete = material
+      $('#modal_for_material').modal('show')
+    },
+
+    deleteMaterial() {
+      axios.delete(this.url + '/api/material/', {
+        data:{
+          id: this.materialForDelete.id
+        }
+      })
+        .then((response) =>
+        {
+          if (response.data.status === 'ok'){
+            this.getMaterials()
+          }
+          $('#modal_for_material').modal('hide')
+        })
+    },
     getLecturerInfo(lecturerID) {
       axios.get(this.url + '/api/lecturers/', {
         params: {

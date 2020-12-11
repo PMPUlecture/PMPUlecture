@@ -5,7 +5,7 @@
       <div class="card-body">
         <!-- <h5 class="card-title">Light card title</h5> -->
         <!-- <p class="card-text"> {{this.sources}} </p> -->
-        <MaterialLink v-for="source in this.sources" :source="source"></MaterialLink>
+        <MaterialLink v-for="source in this.sources" :source="source" v-on:remove="$emit('remove', $event)"></MaterialLink>
       </div>
     </div>
   </div>
@@ -20,8 +20,8 @@ export default {
     sources: {
       type: Object,
       required: true
-    },
-  }
+    }
+  },
 }
 </script>
 

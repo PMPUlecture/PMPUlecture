@@ -121,6 +121,6 @@ class Materials(models.Model):
             'year_of_relevance': self.year_of_relevance,
         }
         if author:
-            if author == self.author:
+            if author == self.author or author.groups.filter(name='admin').exists():
                 output['is_author'] = True
         return output

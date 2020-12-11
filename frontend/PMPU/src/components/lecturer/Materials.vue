@@ -6,16 +6,20 @@
 
     <div class="row">
       <div class="col" v-if="material.source[0].abstract.length">
-        <Abstracts :sources="material.source[0].abstract" />
+        <Abstracts :sources="material.source[0].abstract"
+        v-on:remove="$emit('remove', $event)"/>
       </div>
       <div class="col" v-if="material.source[0].questions.length">
-        <Questions :sources="material.source[0].questions" />
+        <Questions :sources="material.source[0].questions"
+                   v-on:remove="$emit('remove', $event)"/>
       </div>
       <div class="col" v-if="material.source[0].test.length">
-        <Tests :sources="material.source[0].test" />
+        <Tests :sources="material.source[0].test"
+               v-on:remove="$emit('remove', $event)"/>
       </div>
       <div class="col" v-if="material.source[0].other.length">
-        <Other :sources="material.source[0].other" />
+        <Other :sources="material.source[0].other"
+               v-on:remove="$emit('remove', $event)"/>
       </div>
     </div>
   </div>
@@ -43,11 +47,6 @@ export default {
 
     }
   },
-  created() {
-
-  },
-
-
 }
 </script>
 
