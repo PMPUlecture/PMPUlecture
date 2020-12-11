@@ -1,12 +1,12 @@
 <template>
 
   <div>
-    <!-- MODAL -->
+    <!-- MODAL for delete -->
     <div class="modal fade" id="modal_for_material" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Удалить материал {{materialForDelete.name}}</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Удалить материал {{ materialForEdit.name }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -14,6 +14,58 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
             <button type="button" class="btn btn-danger" v-on:click="deleteMaterial">Да</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- MODAL for edit -->
+    <div class="modal fade" id="modal_for_edit_material" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Редактировать материал {{ materialForEdit.name }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label" >Название</span>
+              </div>
+              <input type="text" class="form-control text-primary" v-model="materialForEdit.name">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Ссылка</span>
+              </div>
+              <input type="text" class="form-control text-primary" v-model="materialForEdit.link">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Год</span>
+              </div>
+              <input type="number" class="form-control text-primary" v-model="materialForEdit.year_of_relevance">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Тип</span>
+              </div>
+              <select v-model="materialForEdit.type" class="form-control text-primary">
+                <option value="abstract"> Конспект </option>
+                <option value="questions"> Вопросы </option>
+                <option value="test"> Контрольная </option>
+                <option value="other"> Другое </option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+            <button type="button" class="btn btn-success" v-on:click="editMaterial">Применить</button>
           </div>
         </div>
       </div>
@@ -46,7 +98,8 @@
         :material="material"
         :subjectID="subjID"
         :lecturerID="lecturerID"
-        v-on:remove="openModal($event)"
+        v-on:remove="openModalDelete($event)"
+        v-on:edit="openModelEdit($event)"
       />
       <div class="row">
         <button id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
@@ -73,13 +126,15 @@ export default {
   },
   data() {
     return {
-      url: 'http://127.0.0.1:8000',
+      url: '',
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
       subjectID: this.$route.query.subjectID,
       loading: true,
-      materialForDelete:{
+      materialForEdit:{
         id: '',
-        name: ''
+        name: '',
+        link: '',
+        type: '',
       }
     }
   },
@@ -92,24 +147,46 @@ export default {
     this.getLecturerInfo(this.lecturerID);
   },
   methods: {
-    openModal(material){
-      this.materialForDelete = material
+    openModalDelete(material){
+      this.materialForEdit = material
       $('#modal_for_material').modal('show')
+    },
+
+    openModelEdit(material){
+      this.materialForEdit = material
+      $('#modal_for_edit_material').modal('show')
     },
 
     deleteMaterial() {
       axios.delete(this.url + '/api/material/', {
         data:{
-          id: this.materialForDelete.id
+          id: this.materialForEdit.id
         }
       })
         .then((response) =>
         {
           if (response.data.status === 'ok'){
-            this.getMaterials()
+            this.getLecturerInfo(this.lecturerID)
+            $('#modal_for_material').modal('hide')
           }
-          $('#modal_for_material').modal('hide')
+          else{
+            alert(response.data.error)
+          }
         })
+    },
+
+    editMaterial(){
+      axios.put(this.url + '/api/material/', this.materialForEdit
+      )
+      .then((response) => {
+        if (response.data.status === 'ok'){
+          this.getLecturerInfo(this.lecturerID)
+          $('#modal_for_edit_material').modal('hide')
+        }
+        else{
+          alert(response.data.error)
+        }
+      })
     },
     getLecturerInfo(lecturerID) {
       axios.get(this.url + '/api/lecturers/', {
@@ -122,8 +199,8 @@ export default {
         .then(response => {
           this.lecturerInfo = response.data[0]
           document.title = 'ПМ-ПУ | ' + this.lecturerInfo.name
-          console.log(this.lecturerInfo.materials)
           this.loading = false;
+          document.getElementById("getAll").classList.remove('invisible')
         })
         .catch(error => {
           console.log(error);
@@ -138,7 +215,7 @@ export default {
       })
         .then(response => {
           this.lecturerInfo.materials = response.data[0].materials
-          document.getElementById("getAll").className += " invisible";
+          document.getElementById("getAll").classList.add('invisible');
         })
         .catch(error => {
           console.log(error);
@@ -153,4 +230,9 @@ export default {
 img {
   border: 2px solid black;
 }
+
+.label{
+  width: 90px;
+}
+
 </style>

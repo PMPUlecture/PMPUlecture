@@ -243,6 +243,7 @@ class MaterialView(View):
         return resp
 
     def put(self, request):
+        print(request.body)
         if not request.user.is_authenticated:
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
@@ -266,41 +267,48 @@ class MaterialView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        if material.author != request.user or not user.groups.filter(name='admin').exists():
+        if material.author != request.user and not request.user.groups.filter(name='admin').exists():
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
-        if not data['subject']:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+        if 'subject' in data:
+            data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
+            if not data['subject']:
+                resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
+                resp.setdefault('Access-Control-Allow-Origin', '*')
+                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+                return resp
+            material.subject = data['subject']
 
-        data['lecturer'] = Lecturer.objects.filter(id=int(data['lecturer'])).first()
-        if not data['lecturer']:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+        if 'lecturer' in data:
+            data['lecturer'] = Lecturer.objects.filter(id=int(data['lecturer'])).first()
+            if not data['lecturer']:
+                resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
+                resp.setdefault('Access-Control-Allow-Origin', '*')
+                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+                return resp
+            material.lecturer = data['lecturer']
 
-        if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
-            data['link'] = "http://" + data['link']
+        if 'link' in data:
+            if not data['link'].startswith('http://') and not data['link'].startswith('https://'):
+                data['link'] = "http://" + data['link']
+            material.link = data['link']
 
         if 'year_of_relevance' in data:
-            data['year_of_relevance'] = int(data['year_of_relevance'])
+            if 'year_of_relevance' in data:
+                data['year_of_relevance'] = int(data['year_of_relevance'])
+            material.year_of_relevance = data['year_of_relevance']
 
-        material.name = data['name']
-        material.type = data['type']
-        material.subject = data['subject']
-        material.lecturer = data['lecturer']
-        material.link = data['link']
-        material.year_of_relevance = data['year_of_relevance']
+        if 'name' in data:
+            material.name = data['name']
+
+        if 'type' in data:
+            material.type = data['type']
 
         try:
             material.clean_fields()

@@ -7,19 +7,23 @@
     <div class="row">
       <div class="col" v-if="material.source[0].abstract.length">
         <Abstracts :sources="material.source[0].abstract"
-        v-on:remove="$emit('remove', $event)"/>
+                   v-on:remove="$emit('remove', $event)"
+                   v-on:edit="$emit('edit', $event)"/>
       </div>
       <div class="col" v-if="material.source[0].questions.length">
         <Questions :sources="material.source[0].questions"
-                   v-on:remove="$emit('remove', $event)"/>
+                   v-on:remove="$emit('remove', $event)"
+                   v-on:edit="$emit('edit', $event)"/>
       </div>
       <div class="col" v-if="material.source[0].test.length">
         <Tests :sources="material.source[0].test"
-               v-on:remove="$emit('remove', $event)"/>
+               v-on:remove="$emit('remove', $event)"
+               v-on:edit="$emit('edit', $event)"/>
       </div>
       <div class="col" v-if="material.source[0].other.length">
         <Other :sources="material.source[0].other"
-               v-on:remove="$emit('remove', $event)"/>
+               v-on:remove="$emit('remove', $event)"
+               v-on:edit="$emit('edit', $event)"/>
       </div>
     </div>
   </div>
@@ -31,7 +35,7 @@ import Abstracts from "./materials/Abstracts";
 import Questions from "./materials/Questions";
 import Tests from "./materials/Tests";
 import Other from "./materials/Other";
-import axios from "axios";
+
 
 export default {
   name: "Materials",
