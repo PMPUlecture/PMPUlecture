@@ -63,7 +63,8 @@
 
           </div>
 
-          <div class="modal-footer">
+          <div class="modal-footer d-flex justify-content-end">
+            <button type="button" class="btn btn-danger mr-auto" v-on:click="deleteMaterial">Удалить</button>
             <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
             <button type="button" class="btn btn-success" v-on:click="editMaterial">Применить</button>
           </div>
@@ -168,7 +169,7 @@ export default {
         {
           if (response.data.status === 'ok'){
             this.getLecturerInfo(this.lecturerID)
-            $('#modal_for_material').modal('hide')
+            $('.modal').modal('hide')
           }
           else{
             alert(response.data.error)
