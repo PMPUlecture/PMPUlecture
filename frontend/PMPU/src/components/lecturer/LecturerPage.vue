@@ -53,6 +53,7 @@ export default {
   },
   data() {
     return {
+      url: 'http://127.0.0.1:8000',
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
       subjectID: this.$route.query.subjectID,
       loading: true,
@@ -68,7 +69,7 @@ export default {
   },
   methods: {
     getLecturerInfo(lecturerID) {
-      axios.get('/api/lecturers/', {
+      axios.get(this.url + '/api/lecturers/', {
         params: {
           id: lecturerID,
           fields: 'apmath,photo,vk,materials',
@@ -86,7 +87,7 @@ export default {
         })
     },
     getMaterials() {
-      axios.get('/api/lecturers/', {
+      axios.get(this.url + '/api/lecturers/', {
         params: {
           id: this.lecturerID,
           fields: 'materials'

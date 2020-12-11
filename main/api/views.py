@@ -46,7 +46,7 @@ class LecturerView(View):
         id_subject = request.GET.get('id_subject_for_material') or None
 
         resp = JsonResponse([lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
-                                            photo=is_photo, vk=is_vk, id_subject_for_material=id_subject) for lector in self.lecturers], safe=False)
+                                            photo=is_photo, vk=is_vk, id_subject_for_material=id_subject, author=request.user) for lector in self.lecturers], safe=False)
         resp.setdefault('Access-Control-Allow-Origin', '*')
         return resp
 
@@ -347,7 +347,7 @@ class MaterialView(View):
             resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
             return resp
 
-        if material.author != request.user or not user.groups.filter(name='admin').exists():
+        if material.author != request.user and not request.user.groups.filter(name='admin').exists():
             resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
             resp.setdefault('Access-Control-Allow-Origin', '*')
             resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
