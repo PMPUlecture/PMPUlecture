@@ -4,7 +4,7 @@
     <header>
   <div class="container mb-5">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top mb-5">
-      <router-link class="navbar-brand" to="/"><b>База знаний ПМ-ПУ</b></router-link>
+      <router-link class="navbar-brand" to="/"><b class="ml-2">База знаний ПМ-ПУ</b></router-link>
 
     <!-- Кнопка для выпадающего списка (активируется только на <lg экранах) -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
