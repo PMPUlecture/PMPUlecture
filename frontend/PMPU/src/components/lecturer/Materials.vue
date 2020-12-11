@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="hasSmth">
 
   <h3 class="text-center text-break"> {{material.name}} </h3>
 
@@ -48,7 +48,20 @@ export default {
   props: ['material'],
   data () {
     return {
-
+      hasSmth:
+        ((this.material.source[0].abstract[0] != null) ||
+        (this.material.source[0].questions[0] != null) ||
+        (this.material.source[0].test[0] != null) ||
+        (this.material.source[0].other[0] != null))
+    }
+  },
+  watch: {
+    material: function () {
+      this.hasSmth =
+        ((this.material.source[0].abstract[0] != null) ||
+        (this.material.source[0].questions[0] != null) ||
+        (this.material.source[0].test[0] != null) ||
+        (this.material.source[0].other[0] != null))
     }
   },
 }
