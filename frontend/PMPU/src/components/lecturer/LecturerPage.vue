@@ -74,12 +74,13 @@
 
       <Loader v-if="loading"></Loader>
     <div v-if="!loading" class="container-fluid">
+      <h2 class="row-cols-lg-1 d-block d-lg-none">{{lecturerInfo.name}}</h2>
       <div class="row">
-        <div class="col-3 d-lg-block d-none">
-          <img :src="lecturerInfo.photo" alt="фото" class="w-100">
+        <div class="col-lg-3 row-cols-lg-1">
+          <img :src="lecturerInfo.photo" alt="фото" class="w-100" style="max-width: 500px">
         </div>
         <div class="col-lg-7 col">
-          <h2 class="text-center"> {{lecturerInfo.name}} </h2>
+          <h2 class="text-center d-none d-lg-block"> {{lecturerInfo.name}} </h2>
 
           <div class="list-group text-break">
             <li class="list-group-item list-group-item-primary">Страница преподавателя на сайте факультета</li>
