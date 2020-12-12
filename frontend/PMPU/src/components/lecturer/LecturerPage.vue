@@ -31,24 +31,28 @@
             </button>
           </div>
           <div class="modal-body">
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text label" >Название</span>
               </div>
               <input type="text" class="form-control text-primary" v-model="materialForEdit.name">
             </div>
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text label">Ссылка</span>
               </div>
               <input type="text" class="form-control text-primary" v-model="materialForEdit.link">
             </div>
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text label">Год</span>
               </div>
               <input type="number" class="form-control text-primary" v-model="materialForEdit.year_of_relevance">
             </div>
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text label">Тип</span>
