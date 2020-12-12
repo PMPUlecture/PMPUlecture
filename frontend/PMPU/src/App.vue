@@ -29,7 +29,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;*/
-  background-color: #a7c9df;
+  background-color: #B6D0E2;
 }
 
 h1, h2 {
