@@ -6,11 +6,11 @@
         <p class="m-0 ml-3 text-muted" >{{source.year_of_relevance}}</p>
       </a>
       <!-- v-if="source.is_author" -->
-      <div  class="m-0 ml-2">
-        <a v-if="source.is_author" class="text-warning text-decoration-none delete" v-on:click="edit">
+      <div v-if="source.is_author" class="m-0 ml-2">
+        <a class="text-warning text-decoration-none delete" v-on:click="edit">
           <i class="fas fa-pen"></i>
         </a>
-        <a v-if="source.is_author" class="text-danger text-decoration-none delete" v-on:click="remove">
+        <a class="text-danger text-decoration-none delete" v-on:click="remove">
           <i class="fas fa-times"></i>
         </a>
       </div>

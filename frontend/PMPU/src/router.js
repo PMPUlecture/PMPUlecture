@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Programmes from "./components/Programmes";
 import Login from "./components/Login";
-import ProgramInfo from "./components/ProgramInfo";
+import ProgramInfo from "./components/program/ProgramInfo";
 import LecturerPage from "./components/lecturer/LecturerPage";
 import AddMaterials from "./components/AddMaterials";
 import P404 from "./views/P404";
