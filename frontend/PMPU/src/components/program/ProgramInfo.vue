@@ -16,8 +16,8 @@
 <script>
 
 import axios from "axios";
-import Term from '../components/program/Term';
-import Loader from "./Loader";
+import Term from './Term';
+import Loader from "../Loader";
 
 export default {
   name: "ProgramInfo",

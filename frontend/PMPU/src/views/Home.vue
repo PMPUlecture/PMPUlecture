@@ -128,7 +128,7 @@
 
 <script>
 import Programmes from '../components/Programmes';
-import ProgramInfo from '../components/ProgramInfo';
+import ProgramInfo from '../components/program/ProgramInfo';
 import Login from '../components/Login.vue';
 import axios from "axios";
 import UsefulLinks from "./UsefulLinks";

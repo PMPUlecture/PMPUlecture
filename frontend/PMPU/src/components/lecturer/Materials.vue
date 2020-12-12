@@ -5,25 +5,33 @@
 
 
     <div class="row">
+
       <div class="col" v-if="material.source[0].abstract.length">
-        <Abstracts :sources="material.source[0].abstract"
+        <MaterialBlock :sources="material.source[0].abstract"
                    v-on:remove="$emit('remove', $event)"
-                   v-on:edit="$emit('edit', $event)"/>
+                   v-on:edit="addType($event, 'abstract', 'edit')"
+        name="Конспекты"/>
       </div>
+
       <div class="col" v-if="material.source[0].questions.length">
-        <Questions :sources="material.source[0].questions"
+        <MaterialBlock :sources="material.source[0].questions"
                    v-on:remove="$emit('remove', $event)"
-                   v-on:edit="$emit('edit', $event)"/>
+                   v-on:edit="addType($event, 'questions', 'edit')"
+        name="Вопросы"/>
       </div>
+
       <div class="col" v-if="material.source[0].test.length">
-        <Tests :sources="material.source[0].test"
+        <MaterialBlock :sources="material.source[0].test"
                v-on:remove="$emit('remove', $event)"
-               v-on:edit="$emit('edit', $event)"/>
+               v-on:edit="addType($event, 'test', 'edit')"
+        name="Контрольные"/>
       </div>
+
       <div class="col" v-if="material.source[0].other.length">
-        <Other :sources="material.source[0].other"
+        <MaterialBlock :sources="material.source[0].other"
                v-on:remove="$emit('remove', $event)"
-               v-on:edit="$emit('edit', $event)"/>
+               v-on:edit="addType($event, 'other', 'edit')"
+        name="Другое"/>
       </div>
     </div>
   </div>
@@ -31,21 +39,23 @@
 
 <script>
 
-import Abstracts from "./materials/Abstracts";
-import Questions from "./materials/Questions";
-import Tests from "./materials/Tests";
-import Other from "./materials/Other";
+import MaterialBlock from "./materials/MaterialBlock";
 
 
 export default {
   name: "Materials",
   components: {
-    Abstracts,
-    Questions,
-    Tests,
-    Other
+    MaterialBlock
   },
   props: ['material'],
+
+  methods: {
+    addType(event, type, name_of_event){
+      event.type = type
+      this.$emit(name_of_event, event)
+    }
+  },
+
   data () {
     return {
       hasSmth:
