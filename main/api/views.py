@@ -6,6 +6,30 @@ from ..models import Lecturer, Subject, Programme, Materials
 from django.core.exceptions import ValidationError
 import json
 
+def check_authorization(func):
+    def wrapper(self, request, *args):
+        if not request.user.is_authenticated:
+            return {'status': 'error', 'error': 'Permission denied'}
+        return func(self, request, *args)
+    return wrapper
+
+def check_blacklist(func):
+    def wrapper(self, request, *args):
+        if request.user.groups.filter(name='black list').exists():
+            return {'status': 'error', 'error': 'Blacklisted user'}
+        return func(self, request, *args)
+    return wrapper
+
+# headers for CORS
+def JSON_response(func):
+    def wrapper(*args):
+        response = JsonResponse(func(*args), safe=False)
+        response.setdefault('Access-Control-Allow-Origin', '*')
+        response.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+        response.setdefault('Access-Control-Allow-Headers', 'Content-Type')
+        return response
+    return wrapper
+
 
 def list_of_fields(string: str):
     return string.replace(' ', '').split(',')
@@ -14,6 +38,7 @@ def list_of_fields(string: str):
 class LecturerView(View):
     lecturers = Lecturer.objects.all()
 
+    @JSON_response
     def get(self, request):
         """params:
         fields=subjects,materials,apmath,photo,vk
@@ -30,9 +55,7 @@ class LecturerView(View):
             self.lecturers = self.lecturers.filter(subject=request.GET.get("subject"))
 
         if not self.lecturers:
-            resp = JsonResponse({'error': 'there is no such lecturer'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            return resp
+            return {'error': 'there is no such lecturer'}
 
         self.lecturers = self.lecturers.order_by('name')
 
@@ -45,37 +68,20 @@ class LecturerView(View):
 
         id_subject = request.GET.get('id_subject_for_material') or None
 
-        resp = JsonResponse([lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
-                                            photo=is_photo, vk=is_vk, id_subject_for_material=id_subject, author=request.user) for lector in self.lecturers], safe=False)
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        return resp
-
+        return [lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
+                               photo=is_photo, vk=is_vk, id_subject_for_material=id_subject,
+                               author=request.user) for lector in self.lecturers]
+    @JSON_response
+    @check_authorization
+    @check_blacklist
     def post(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-        
-        if request.user.groups.filter(name='black list').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-
         data = json.loads(request.body)
         
         subjects = None
         if 'subjects' in data:
             subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
             if not subjects:
-                resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
-                resp.setdefault('Access-Control-Allow-Origin', '*')
-                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-                return resp
+                return {'status': 'error', 'error': 'there is no such subjects'}
             del data['subjects']
 
         if 'apmath_url' in data and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
@@ -92,34 +98,14 @@ class LecturerView(View):
         try:
             new_lecturer.clean_fields()
         except ValidationError as e:
-            resp = JsonResponse({'status': 'error', 'error': e.message_dict})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': e.message_dict}
 
-        resp = JsonResponse({'status': 'ok'}, safe=False)
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT')
-        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        return resp
+        return {'status': 'ok'}
 
+    @JSON_response
+    @check_authorization
+    @check_blacklist
     def put(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            resp.setdefault('Access-Control-Allow-Credentials', 'true')
-            return resp
-        
-        if request.user.groups.filter(name='black list').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-
         data = json.loads(request.body)
         lecturer = Lecturer.objects.filter(id=int(data['id'])).first()
         if not lecturer:
@@ -147,31 +133,19 @@ class LecturerView(View):
             try:
                 lecturer.subject.add(*data['subjects'])
             except IntegrityError:
-                resp = JsonResponse({'status': 'error', 'error': 'there is no such subjects'})
-                resp.setdefault('Access-Control-Allow-Origin', '*')
-                resp.setdefault('Access-Control-Allow-Methods', 'PUT')
-                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-                return resp
+                return {'status': 'error', 'error': 'there is no such subjects'}
 
         try:
             lecturer.clean_fields()
         except ValidationError as e:
-            resp = JsonResponse({'status': 'error', 'error': e.message_dict})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': e.message_dict}
 
         lecturer.save()
-
-        resp = JsonResponse({'status': 'ok'})
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'PUT')
-        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        return resp
+        return {'status': 'ok'}
 
 
 class UserDetail(View):
+    @JSON_response
     def get(self, request):
         response = {"is_authenticated": request.user.is_authenticated}
         if response["is_authenticated"]:
@@ -180,53 +154,29 @@ class UserDetail(View):
                             last_name=request.user.last_name,
                             is_admin=request.user.groups.filter(name='admin').exists()),
 
-        resp = JsonResponse(response)
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        return resp
+        return response
 
 
 class MaterialView(View):
+    @JSON_response
+    @check_authorization
+    @check_blacklist
     def post(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-        
-        if request.user.groups.filter(name='black list').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
 
         data = json.loads(request.body)
         validator = URLValidator()
         try:
             validator(data.get('link'))
         except ValidationError as e:
-            resp = JsonResponse({'status': 'error', 'error': e.message})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': e.message}
 
         data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
         if not data['subject']:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'there is no such subject'}
 
         data['lecturer'] = Lecturer.objects.filter(id=int(data['lecturer'])).first()
         if not data['lecturer']:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'there is no such lecturer'}
 
         if request.user.is_authenticated:
             data['author'] = request.user
@@ -236,62 +186,30 @@ class MaterialView(View):
 
         material = Materials.objects.create(**data)
 
-        resp = JsonResponse({'status': 'ok'})
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        return resp
+        return {'status': 'ok'}
 
+    @JSON_response
+    @check_authorization
+    @check_blacklist
     def put(self, request):
-        print(request.body)
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-        
-        if request.user.groups.filter(name='black list').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-
         data = json.loads(request.body)
         material = Materials.objects.filter(id=int(data['id'])).first()
         if not material:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such material'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'there is no such material'}
 
         if material.author != request.user and not request.user.groups.filter(name='admin').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'Permission denied'}
 
         if 'subject' in data:
             data['subject'] = Subject.objects.filter(id=int(data['subject'])).first()
             if not data['subject']:
-                resp = JsonResponse({'status': 'error', 'error': 'there is no such subject'})
-                resp.setdefault('Access-Control-Allow-Origin', '*')
-                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-                return resp
+                return {'status': 'error', 'error': 'there is no such subject'}
             material.subject = data['subject']
 
         if 'lecturer' in data:
             data['lecturer'] = Lecturer.objects.filter(id=int(data['lecturer'])).first()
             if not data['lecturer']:
-                resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
-                resp.setdefault('Access-Control-Allow-Origin', '*')
-                resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-                resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-                return resp
+                return {'status': 'error', 'error': 'there is no such lecturer'}
             material.lecturer = data['lecturer']
 
         if 'link' in data:
@@ -314,66 +232,34 @@ class MaterialView(View):
             material.clean_fields()
         except ValidationError as e:
             if 'link' in e.message_dict:
-                resp = JsonResponse({'status': 'error', 'error': e.message_dict['link'][0]})
+                return {'status': 'error', 'error': e.message_dict['link'][0]}
             else:
-                resp = JsonResponse({'status': 'error', 'error': e.message_dict})
-                return resp
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+                return {'status': 'error', 'error': e.message_dict}
 
         material.save()
+        return {'status': 'ok'}
 
-        resp = JsonResponse({'status': 'ok'})
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        return resp
-
+    @JSON_response
+    @check_authorization
+    @check_blacklist
     def delete(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-        
-        if request.user.groups.filter(name='black list').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-
         data = json.loads(request.body)
         material = Materials.objects.filter(id=int(data['id'])).first()
         if not material:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such material'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'there is no such material'}
 
         if material.author != request.user and not request.user.groups.filter(name='admin').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'Permission denied'}
 
         material.delete()
 
-        resp = JsonResponse({'status': 'ok'})
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        return resp
+        return {'status': 'ok'}
 
 
 class SubjectsView(View):
     subjects = Subject.objects.all()
 
+    @JSON_response
     def get(self, request):
         """params:
         fields=lecturers,term,programme
@@ -404,9 +290,7 @@ class SubjectsView(View):
                 try:
                     output['programme'] = Programme.objects.get(pk=request.GET.get('programme')).name
                 except:
-                    resp = JsonResponse({'error': 'there are no such programme'})
-                    resp.setdefault('Access-Control-Allow-Origin', '*')
-                    return resp
+                    return {'error': 'there are no such programme'}
             if is_term:
                 output["terms"] = [{'term': term, 'subjects':
                     [subj.as_dict(lecturer=is_lecturers, programme=is_programme) for subj in self.subjects.filter(term=term)]}
@@ -414,70 +298,39 @@ class SubjectsView(View):
             else:
                 output['subjects'] = [subj.as_dict(lecturer=is_lecturers, programme=is_programme)
                                       for subj in self.subjects]
-            resp = JsonResponse(output)
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            return resp
+            return output
         else:
-            resp = JsonResponse({'error': 'there are no such subjects'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            return resp
+            return {'error': 'there are no such subjects'}
 
+    @JSON_response
+    @check_authorization
+    @check_blacklist
     def post(self, request):
-        if not request.user.is_authenticated:
-            resp = JsonResponse({'status': 'error', 'error': 'Permission denied'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-        
-        if request.user.groups.filter(name='black list').exists():
-            resp = JsonResponse({'status': 'error', 'error': 'Blacklisted user'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
-
         data = json.loads(request.body)
         data['programme'] = Programme.objects.filter(id=data['programme']).first()
         if not data['programme']:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such programme'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'there is no such programme'}
+
         data['term'] = int(data['term'])
         if data['term'] not in range(1, 9):
-            resp = JsonResponse({'status': 'error', 'error': 'term should be between 1 and 8'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'term should be between 1 and 8'}
 
         new_subject = Subject.objects.create(**data)
         try:
             new_subject.clean_fields()
         except ValidationError as e:
-            resp = JsonResponse({'status': 'error', 'error': e.message_dict})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': e.message_dict}
 
-        resp = JsonResponse({'status': 'ok'})
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        resp.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-        return resp
+        return {'status': 'ok'}
 
 
 class ProgrammeView(View):
+    @JSON_response
     def get(self, request):
         """params: fields=img_url"""
         is_img_url = bool(request.GET.get('fields'))
         queryset = Programme.objects.all()
-        response_raw = dict()
+        output = dict()
         for degree in Programme.TypeOfDegrees.choices:
-            response_raw[degree[0]] = [obj.as_dict(img_url=is_img_url) for obj in queryset.filter(degree=degree[0])]
-        resp = JsonResponse(response_raw, safe=False)
-        resp.setdefault('Access-Control-Allow-Origin', '*')
-        return resp
+            output[degree[0]] = [obj.as_dict(img_url=is_img_url) for obj in queryset.filter(degree=degree[0])]
+        return output
