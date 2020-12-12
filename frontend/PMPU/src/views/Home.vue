@@ -23,6 +23,7 @@
             Добавить материал
           </router-link>
         </div>
+
         <!-- Форма для неавторизированных пользователей -->
         <div v-else class="bg-warning p-2 rounded d-flex flex-row justify-content-between">
           <span class="m-auto">Вход не выполнен</span>
@@ -166,9 +167,6 @@ export default {
           console.log(error);
         })
     },
-    logout() {
-      axios.get('/accout/logout/')
-    },
   }
 }
 </script>
@@ -177,10 +175,6 @@ export default {
 
 h1, h2 {
   font-weight: normal;
-}
-
-.nostroke:hover{
-  text-decoration: none;
 }
 
 .my-sticky-top{
