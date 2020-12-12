@@ -326,7 +326,7 @@ export default {
             this.resetField('typeField', 'disableField8')
             this.disableField9 = true
             this.disableButton = true
-
+            ym(70412992,'reachGoal','clickOnAddMaterial')
             this.toasts.title = "Успех";
             this.toasts.body = "Успешно отправлено!"
             $('.toast').toast('show');
