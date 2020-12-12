@@ -6,6 +6,7 @@
     <div class="accordion" id="programme">
       <Term v-for="term in progInfo.terms"
             :termInfo="term"
+            :user="user"
       />
     </div>
   </div>
@@ -30,16 +31,19 @@ export default {
   data() {
     return {
       progInfo: {terms: [], programme: ''},
-      loading: true
+      loading: true,
+      url: '',
+      user: {is_authenticated: false}
     }
   },
   created() {
     this.getProgInfo(this.progID);
+    this.get_user()
 
   },
   methods: {
     getProgInfo(progID) {
-      axios.get('/api/subjects/', {
+      axios.get(this.url + '/api/subjects/', {
         params: {
           programme: progID,
           fields: 'term,lecturers'
@@ -55,6 +59,13 @@ export default {
           console.log(error);
         })
     },
+
+    get_user(){
+      axios.get(this.url + '/api/user/')
+      .then((response) =>{
+        this.user.is_authenticated = response.data.is_authenticated
+      })
+    }
   }
 }
 

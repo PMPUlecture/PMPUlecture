@@ -1,16 +1,15 @@
 <template>
   <div class="card">
-    <div class="card-header">
-      <a class="stretched-link text-primary" data-toggle="collapse" :href="'#collapse'+this.termInfo.term" :aria-controls="'collapse'+this.termInfo.term">
+      <a class="card-header text-primary" data-toggle="collapse" :href="'#collapse'+this.termInfo.term" :aria-controls="'collapse'+this.termInfo.term">
         {{ this.termInfo.term }} семестр
       </a>
-    </div>
 
     <div :id="'collapse'+this.termInfo.term" class="collapse" data-parent="#programme">
       <div class="card-body">
         <div class="accordion" :id="'collapseTerm'+this.termInfo.term">
           <Subject v-for="subject in this.termInfo.subjects"
                      :subjectInfo="subject" :termInfo="termInfo.term"
+                   :user="user"
             />
         </div>
       </div>
@@ -29,6 +28,9 @@ export default {
     termInfo: {
       type: Object,
       required: true
+    },
+    user:{
+      type: Object
     }
   },
   components: {

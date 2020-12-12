@@ -132,7 +132,7 @@ export default {
   },
   data() {
     return {
-      url: 'http://127.0.0.1:8000',
+      url: '',
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
       subjectID: this.$route.query.subjectID,
       loading: true,
