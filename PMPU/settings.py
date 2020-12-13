@@ -25,9 +25,9 @@ SECRET_KEY = 'sj&7thxq#2a6h-f(@kp=i9m=b6i8et45l*9s0)ye*8a8xonnf7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if 'DYNO' in os.environ:
-    debug = False
+    DEBUG = False
 else:
-    debug = True
+    DEBUG = True
 
 ALLOWED_HOSTS = []
 
