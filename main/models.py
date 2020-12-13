@@ -59,6 +59,7 @@ class Lecturer(models.Model):
         output = {
             'id': self.id,
             'name': self.name,
+            'the_rest-of-materials': 0,
         }
         if subjects:
             output['subjects'] = [item.as_dict() for item in self.subject.all()]
@@ -72,12 +73,14 @@ class Lecturer(models.Model):
             all_materials = Materials.objects.filter(lecturer=self).order_by('year_of_relevance').reverse()
             output['materials'] = list()
             if id_subject_for_material:
-                subjects = Subject.objects.filter(lecturer=self, id = id_subject_for_material)
+                subjects = Subject.objects.filter(lecturer=self, id=id_subject_for_material)
+                output['the_rest-of-materials'] = Materials.objects.filter(lecturer=self).exclude(subject=subjects.first()).count()
             else:
                 subjects = Subject.objects.filter(lecturer=self)
             for subject in subjects:
                 output['materials'].append(
-                    {"id_subject": subject.id, "name": subject.name, "source": [
+                    {
+                        "id_subject": subject.id, "name": subject.name, "source": [
                         {type_of_material[0]: [material.as_dict(author) for material in
                                                all_materials.filter(subject=subject, type=type_of_material[0])]
                          for type_of_material in Materials.TypeOfMaterial.choices}]
