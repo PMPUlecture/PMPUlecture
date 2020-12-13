@@ -6,6 +6,7 @@ from ..models import Lecturer, Subject, Programme, Materials
 from django.core.exceptions import ValidationError
 import json
 
+
 def check_authorization(func):
     def wrapper(self, request, *args):
         if not request.user.is_authenticated:
@@ -13,12 +14,14 @@ def check_authorization(func):
         return func(self, request, *args)
     return wrapper
 
+
 def check_blacklist(func):
     def wrapper(self, request, *args):
         if request.user.groups.filter(name='black list').exists():
             return {'status': 'error', 'error': 'Blacklisted user'}
         return func(self, request, *args)
     return wrapper
+
 
 # headers for CORS
 def JSON_response(func):
@@ -71,6 +74,7 @@ class LecturerView(View):
         return [lector.as_dict(subjects=is_subjects, apmath=is_apmath, materials=is_materials,
                                photo=is_photo, vk=is_vk, id_subject_for_material=id_subject,
                                author=request.user) for lector in self.lecturers]
+
     @JSON_response
     @check_authorization
     @check_blacklist
@@ -184,7 +188,7 @@ class MaterialView(View):
         if 'year_of_relevance' in data:
             data['year_of_relevance'] = int(data['year_of_relevance'])
 
-        material = Materials.objects.create(**data)
+        Materials.objects.create(**data)
 
         return {'status': 'ok'}
 
@@ -289,7 +293,7 @@ class SubjectsView(View):
             if request.GET.get('programme'):
                 try:
                     output['programme'] = Programme.objects.get(pk=request.GET.get('programme')).name
-                except:
+                except Programme.DoesNotExist:
                     return {'error': 'there are no such programme'}
             if is_term:
                 output["terms"] = [{'term': term, 'subjects':
