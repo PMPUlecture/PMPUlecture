@@ -105,7 +105,7 @@
                 <div class="card bg-light mb-3">
                   <div class="card-body">
                     <h4 class="card-title">Нашли баг?</h4>
-                    <p class="card-text">Мы будем очень признательны, если вы сообщите нам о найденых недочётах.</p>
+                    <p class="card-text">Мы будем очень признательны, если вы сообщите нам о найденных недочётах.</p>
                     <a class="btn text-white text-decoration-none" style="background-color: #4a76a8"
                        href="https://vk.me/kirilllisov" target="_blank"><i class="fab fa-vk"></i> Написать</a>
 
