@@ -67,7 +67,7 @@
           <div class="row ml-0 mr-0">
             <select v-model="lecturerField" class="form-control mt-3 col" id="field5" :disabled="disableField5">
               <option selected="true" value="" disabled> Лектор </option>
-              <option v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
+              <option v-if="!lecturer.length" v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
             </select>
 
               <button data-toggle="modal" type="button" data-target="#staticBackdrop" class="btn btn-danger col-sm-3 mt-3 ml-sm-3" v-on:click="get_subject_info" :disabled="disableField5">Нет лектора?</button>
