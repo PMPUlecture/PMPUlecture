@@ -122,6 +122,7 @@
 import axios from "axios";
 import Materials from "./Materials"
 import Loader from "../Loader";
+import variables from "../../views/variables";
 
 export default {
   name: "LecturerPage",
@@ -132,7 +133,6 @@ export default {
   },
   data() {
     return {
-      url: '',
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
       subjectID: this.$route.query.subjectID,
       loading: true,
@@ -164,7 +164,7 @@ export default {
     },
 
     deleteMaterial() {
-      axios.delete(this.url + '/api/material/', {
+      axios.delete(variables.url + '/api/material/', {
         data:{
           id: this.materialForEdit.id
         }
@@ -182,7 +182,7 @@ export default {
     },
 
     editMaterial(){
-      axios.put(this.url + '/api/material/', this.materialForEdit
+      axios.put(variables.url + '/api/material/', this.materialForEdit
       )
       .then((response) => {
         if (response.data.status === 'ok'){
@@ -195,7 +195,7 @@ export default {
       })
     },
     getLecturerInfo(lecturerID) {
-      axios.get(this.url + '/api/lecturers/', {
+      axios.get(variables.url + '/api/lecturers/', {
         params: {
           id: lecturerID,
           fields: 'apmath,photo,vk,materials',
@@ -213,7 +213,7 @@ export default {
         })
     },
     getMaterials() {
-      axios.get(this.url + '/api/lecturers/', {
+      axios.get(variables.url + '/api/lecturers/', {
         params: {
           id: this.lecturerID,
           fields: 'materials'

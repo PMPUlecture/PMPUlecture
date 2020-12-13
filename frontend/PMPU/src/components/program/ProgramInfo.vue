@@ -19,6 +19,7 @@
 import axios from "axios";
 import Term from './Term';
 import Loader from "../Loader";
+import variables from "../../views/variables";
 
 export default {
   name: "ProgramInfo",
@@ -32,7 +33,6 @@ export default {
     return {
       progInfo: {terms: [], programme: ''},
       loading: true,
-      url: '',
       user: {is_authenticated: false}
     }
   },
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     getProgInfo(progID) {
-      axios.get(this.url + '/api/subjects/', {
+      axios.get(variables.url + '/api/subjects/', {
         params: {
           programme: progID,
           fields: 'term,lecturers'
@@ -61,7 +61,7 @@ export default {
     },
 
     get_user(){
-      axios.get(this.url + '/api/user/')
+      axios.get(variables.url + '/api/user/')
       .then((response) =>{
         this.user.is_authenticated = response.data.is_authenticated
       })

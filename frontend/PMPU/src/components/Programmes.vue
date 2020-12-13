@@ -25,6 +25,7 @@ import axios from "axios";
 import ProgrammeCard from "./ProgrammeCard";
 import Loader from "./Loader";
 import Login from "./Login";
+import variables from "../views/variables";
 
 export default {
   //name: 'App',
@@ -45,7 +46,7 @@ export default {
   },
   methods: {
     getProgList() {
-      axios.get('/api/programmes/', {
+      axios.get(variables.url + '/api/programmes/', {
         params: {
           fields: 'img_url'
         }

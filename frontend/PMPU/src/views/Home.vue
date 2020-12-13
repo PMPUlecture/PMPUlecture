@@ -132,6 +132,7 @@ import ProgramInfo from '../components/program/ProgramInfo';
 import Login from '../components/Login.vue';
 import axios from "axios";
 import UsefulLinks from "./UsefulLinks";
+import variables from "./variables";
 
 export default {
   //name: 'App',
@@ -159,7 +160,7 @@ export default {
   },
   methods: {
     getUser() {
-      axios.get('/api/user/')
+      axios.get(variables.url + '/api/user/')
         .then(response => {
           this.user = response.data
         })

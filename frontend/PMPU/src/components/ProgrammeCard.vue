@@ -34,7 +34,6 @@ a:hover {
   text-decoration: none; /* Отменяем подчеркивание у ссылки */
 }
 
-
 .imgback {
   height: 250px;
   object-fit: cover;
@@ -44,15 +43,6 @@ a:hover {
 .program-text1 {
   text-shadow: #000 3px 3px 5px;
 }
-
-
-/*@media (max-width: 350px) {
-  .text-of-card{
-    display: none;
-  }
-}*/
-
-
 
 .shadow {
   box-shadow: 0 0 18px #000;

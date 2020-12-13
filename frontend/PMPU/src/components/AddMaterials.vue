@@ -122,6 +122,7 @@ top: 100px; right: 50px; z-index: 10">
 
 <script>
 import axios from "axios";
+import variables from "../views/variables"; variables
 
 export default {
   name: "AddMaterials",
@@ -145,6 +146,7 @@ export default {
       titleField: '',
       linkField: '',
       typeField: '',
+      nowYear: new Date().getFullYear(),
       year_of_relevance: new Date().getFullYear(),
 
       programs: null,
@@ -189,7 +191,16 @@ export default {
         this.disableField3 = false
       }
     },
-    semesterField: 'getSubjects',
+    semesterField: function (){
+      if (this.semesterField < 1){
+        this.semesterField = 1
+      }
+      if (this.semesterField > 8){
+        this.semesterField = 8
+      }
+        this.getSubjects()
+
+    },
     subjectField: 'getLecturers',
     lecturerField: function () {
 
@@ -206,7 +217,16 @@ export default {
     },
     titleField: 'unableButton',
     linkField: 'unableButton',
-    typeField: 'unableButton'
+    typeField: 'unableButton',
+    year_of_relevance: function () {
+      if (this.year_of_relevance > this.nowYear + 1){
+        console.log("year")
+        this.year_of_relevance = this.nowYear + 1
+      }
+      if (this.year_of_relevance < 2000){
+        this.year_of_relevance = 2000
+      }
+    }
   },
   created() {
 
@@ -225,7 +245,7 @@ export default {
       this.disableButton = true
 
       if (this.degreeField != '') {
-        axios.get('/api/programmes/')
+        axios.get(variables.url + '/api/programmes/')
           .then(response => {
             if (this.degreeField == 'Бакалавриат')
               this.programs = response.data.bachelor
@@ -252,7 +272,7 @@ export default {
       this.disableButton = true
 
       if (this.semesterField != '') {
-        axios.get('/api/subjects/', {
+        axios.get(variables.url + '/api/subjects/', {
           params: {
             term: semester,
             programme: this.programField
@@ -278,7 +298,7 @@ export default {
       this.disableButton = true
 
       if (this.subjectField != '') {
-        axios.get('/api/lecturers/', {
+        axios.get(variables.url + '/api/lecturers/', {
           params: {
             subject: this.subjectField
           }
@@ -313,7 +333,7 @@ export default {
 
       const str = JSON.stringify(this.material);
 
-      axios.post('/api/material/', str)
+      axios.post(variables.url + '/api/material/', str)
         .then((response) => {
           if (response.data.status === 'ok') {
             this.degreeField = ''
@@ -345,7 +365,7 @@ export default {
     },
 
     get_subject_info(){
-      axios.get('/api/subjects/', {
+      axios.get(variables.url + '/api/subjects/', {
         params:{
           id: this.subjectField,
           fields: 'programme'
@@ -355,7 +375,7 @@ export default {
         this.subjectInformation.name = response.data.subjects[0].name
         this.subjectInformation.programme = response.data.subjects[0].programme.name
       }))
-      axios.get('/api/lecturers/')
+      axios.get(variables.url + '/api/lecturers/')
       .then((response => {
         this.subjectInformation.allLecturers = response.data
       }))
@@ -363,7 +383,7 @@ export default {
 
     put_lecturer(){
       if (this.subjectInformation.currentLecturer !== '') {
-        axios.put('/api/lecturers/', {
+        axios.put(variables.url + '/api/lecturers/', {
           id: this.subjectInformation.currentLecturer,
           subjects: [this.subjectField]
         })
