@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
+def index(request):
+    if request.META.get('wsgi.url_scheme') == 'http':
+        return redirect('https://pmpulecture.herokuapp.com' + request.path)
 
-def index(req):
-    return render(req, 'index.html', context={'user': req.user})
+    return render(request, 'index.html', context={'user': request.user})
 
 
