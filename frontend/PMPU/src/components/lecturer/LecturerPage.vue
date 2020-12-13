@@ -108,7 +108,7 @@
         v-on:edit="openModelEdit($event)"
       />
       <div class="row">
-        <button id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
+        <button v-if="lecturerInfo.the_rest_of_materials" id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
       </div>
     </div>
 
@@ -206,7 +206,7 @@ export default {
           this.lecturerInfo = response.data[0]
           document.title = 'ПМ-ПУ | ' + this.lecturerInfo.name
           this.loading = false;
-          document.getElementById("getAll").classList.remove('invisible')
+          //document.getElementById("getAll").classList.remove('invisible')
         })
         .catch(error => {
           console.log(error);

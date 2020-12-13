@@ -59,7 +59,7 @@ class Lecturer(models.Model):
         output = {
             'id': self.id,
             'name': self.name,
-            'the_rest-of-materials': 0,
+            'the_rest_of_materials': 0,
         }
         if subjects:
             output['subjects'] = [item.as_dict() for item in self.subject.all()]
@@ -74,7 +74,7 @@ class Lecturer(models.Model):
             output['materials'] = list()
             if id_subject_for_material:
                 subjects = Subject.objects.filter(lecturer=self, id=id_subject_for_material)
-                output['the_rest-of-materials'] = Materials.objects.filter(lecturer=self).exclude(subject=subjects.first()).count()
+                output['the_rest_of_materials'] = Materials.objects.filter(lecturer=self).exclude(subject=subjects.first()).count()
             else:
                 subjects = Subject.objects.filter(lecturer=self)
             for subject in subjects:
