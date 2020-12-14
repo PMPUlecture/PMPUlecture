@@ -124,8 +124,8 @@ class LecturerView(View):
                 data['apmath_url'] = "http://" + data['apmath_url']
             if data.get('vk_discuss_url') and not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
                 data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
-            if data.get('photo_url') and 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
-                data['photo_url'] = "http://" + data['photo_url']
+        if data.get('photo_url') and 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+            data['photo_url'] = "http://" + data['photo_url']
 
             lecturer.name = data.get('name') or lecturer.name
 
