@@ -127,11 +127,11 @@ class LecturerView(View):
         if data.get('photo_url') and 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
             data['photo_url'] = "http://" + data['photo_url']
 
-            lecturer.name = data.get('name') or lecturer.name
+        lecturer.name = data.get('name') or lecturer.name
 
-            lecturer.apmath_url = data.get('apmath_url') or lecturer.apmath_url
-            lecturer.vk_discuss_url = data.get('vk_discuss_url') or lecturer.vk_discuss_url
-            lecturer.photo_url = data.get('photo_url') or lecturer.photo_url
+        lecturer.apmath_url = data.get('apmath_url') or lecturer.apmath_url
+        lecturer.vk_discuss_url = data.get('vk_discuss_url') or lecturer.vk_discuss_url
+        lecturer.photo_url = data.get('photo_url') or lecturer.photo_url
 
         if data.get('subjects'):
             try:
