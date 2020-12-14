@@ -107,7 +107,7 @@ class LecturerView(View):
         return {'status': 'ok'}
 
     @JSON_response
-    @check_authorization
+    #@check_authorization
     @check_blacklist
     def put(self, request):
         data = json.loads(request.body)
