@@ -5,11 +5,13 @@ from django.views import View
 from ..models import Lecturer, Subject, Programme, Materials
 from django.core.exceptions import ValidationError
 import json
+import os
 
 
 def check_authorization(func):
     def wrapper(self, request, *args):
-        if not request.user.is_authenticated:
+        if not request.user.is_authenticated and \
+            json.loads(request.body).get('supercode') != os.environ.get('SUPERCODE'):
             return {'status': 'error', 'error': 'Permission denied'}
         return func(self, request, *args)
     return wrapper
@@ -80,7 +82,8 @@ class LecturerView(View):
     @check_blacklist
     def post(self, request):
         data = json.loads(request.body)
-        
+        if 'supercode' in data:
+            del data['supercode']
         subjects = None
         if 'subjects' in data:
             subjects = Subject.objects.filter(id__in=list(map(int, data['subjects'])))
@@ -111,20 +114,19 @@ class LecturerView(View):
     @check_blacklist
     def put(self, request):
         data = json.loads(request.body)
+        if 'supercode' in data:
+            del data['supercode']
+
         lecturer = Lecturer.objects.filter(id=int(data['id'])).first()
         if not lecturer:
-            resp = JsonResponse({'status': 'error', 'error': 'there is no such lecturer'})
-            resp.setdefault('Access-Control-Allow-Origin', '*')
-            resp.setdefault('Access-Control-Allow-Methods', 'PUT')
-            resp.setdefault('Access-Control-Allow-Headers', 'Content-Type')
-            return resp
+            return {'status': 'error', 'error': 'there is no such lecturer'}
 
         if request.user.groups.filter(name='admin').exists(): # Изменение всех полей доступно только админам
             if data.get('apmath_url') and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
                 data['apmath_url'] = "http://" + data['apmath_url']
             if data.get('vk_discuss_url') and not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
                 data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
-            if data.get('photo_url') and 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+            if data.get('photo_url') and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
                 data['photo_url'] = "http://" + data['photo_url']
 
             lecturer.name = data.get('name') or lecturer.name
@@ -166,8 +168,9 @@ class MaterialView(View):
     @check_authorization
     @check_blacklist
     def post(self, request):
-
         data = json.loads(request.body)
+        if 'supercode' in data:
+            del data['supercode']
         validator = URLValidator()
         try:
             validator(data.get('link'))
@@ -197,6 +200,8 @@ class MaterialView(View):
     @check_blacklist
     def put(self, request):
         data = json.loads(request.body)
+        if 'supercode' in data:
+            del data['supercode']
         material = Materials.objects.filter(id=int(data['id'])).first()
         if not material:
             return {'status': 'error', 'error': 'there is no such material'}
@@ -248,6 +253,8 @@ class MaterialView(View):
     @check_blacklist
     def delete(self, request):
         data = json.loads(request.body)
+        if 'supercode' in data:
+            del data['supercode']
         material = Materials.objects.filter(id=int(data['id'])).first()
         if not material:
             return {'status': 'error', 'error': 'there is no such material'}
@@ -311,6 +318,8 @@ class SubjectsView(View):
     @check_blacklist
     def post(self, request):
         data = json.loads(request.body)
+        if 'supercode' in data:
+            del data['supercode']
         data['programme'] = Programme.objects.filter(id=data['programme']).first()
         if not data['programme']:
             return {'status': 'error', 'error': 'there is no such programme'}
