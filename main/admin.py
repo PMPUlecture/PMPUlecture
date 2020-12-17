@@ -8,6 +8,7 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'term', 'programme')
     list_filter = ('term', 'programme')
     fields = ['name', ('term', 'programme')]
+    ordering = ('programme', 'term', 'name')
 
 
 class MaterialsInline(admin.TabularInline):
