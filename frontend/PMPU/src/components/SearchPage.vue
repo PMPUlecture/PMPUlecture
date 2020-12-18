@@ -45,9 +45,12 @@ name: "SearchPage",
   },
   methods: {
     get_subjects(ar){
-      let out = ar[0].name
-      for (let i =1; i < ar.length; i++){
-        out += ', ' + ar[i].name
+      let out = '';
+      if (ar.length) {
+        out += ar[0].name
+        for (let i = 1; i < ar.length; i++) {
+          out += ', ' + ar[i].name
+        }
       }
       return out;
     },
