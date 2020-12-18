@@ -34,6 +34,10 @@
       <br>
       <!-- Полезные ссылки -->
         <UsefulLinks class="list-group d-lg-none d-block"></UsefulLinks>
+      <form @submit.prevent="search" class="form-inline my-2 my-lg-0 ml-auto">
+        <input v-model="searchInput" class="form-control mr-sm-2" type="text" placeholder="Найти лектора">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Поиск</button>
+      </form>
     </div>
   </nav>
   </div>
@@ -118,7 +122,7 @@
         </div>
         <div class="col-lg-9 col"> <!-- правая колонка, меняется -->
 
-              <router-view></router-view>
+              <router-view :key="$route.fullPath"></router-view>
 
         </div>
       </div>
@@ -153,6 +157,7 @@ export default {
         "last_name": "Lisov",
         "is_admin": true
       },
+      searchInput: '',
     }
   },
   created() {
@@ -168,6 +173,12 @@ export default {
           console.log(error);
         })
     },
+    search(){
+      this.searchInput = this.searchInput.trim()
+      if (this.searchInput !== '') {
+        this.$router.push('/search/?q=' + this.searchInput)
+      }
+    }
   }
 }
 </script>

@@ -6,6 +6,7 @@ import ProgramInfo from "./components/program/ProgramInfo";
 import LecturerPage from "./components/lecturer/LecturerPage";
 import AddMaterials from "./components/AddMaterials";
 import P404 from "./views/P404";
+import SearchPage from "./components/SearchPage";
 
 Vue.use(Router)
 
@@ -37,6 +38,10 @@ const router = new Router({
       component: LecturerPage,
       props: true,
       meta: {title: "Пм-Пу| Лектор"}
+    },
+    {
+      path: '/search',
+      component: SearchPage,
     },
     {
       path: '*',
