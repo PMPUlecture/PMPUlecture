@@ -8,6 +8,7 @@ import AddMaterials from "./components/AddMaterials";
 import P404 from "./views/P404";
 import SearchPage from "./components/SearchPage";
 import About from "./components/About";
+import Funding from "./components/Funding";
 
 Vue.use(Router)
 
@@ -47,6 +48,10 @@ const router = new Router({
     {
       path: '/search',
       component: SearchPage,
+    },
+    {
+      path: '/funding',
+      component: Funding,
     },
     {
       path: '*',
