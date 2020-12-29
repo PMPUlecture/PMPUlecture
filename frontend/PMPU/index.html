@@ -27,10 +27,35 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/70412992" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    <style>
+      #footer > a {
+        color: #1a252f;
+      }
+    </style>
   </head>
-  <body>
+  <body class="d-flex flex-column vh-100" style="background-color: #B6D0E2;">
 
-    <div id="app" class="d-block"></div>
+    <div id="app" class="d-block flex-grow-1 mb-2"></div>
+    <footer class="pt-3 pb-3 mt-auto" style="background-color: #598bab;">
+      <div class="container">
+        <div class="row" id="footer">
+
+          <div class="col-lg-4 row-cols-1">
+            <h5>По вопросам добавления, удаления данных писать на почту</h5>
+            <div class="rounded bg-primary p-1 pl-2 text-white" style="font-size: medium">
+              pmpu-lecture@bk.ru
+            </div>
+          </div>
+
+            <a href="#" class="col-lg row-cols-1">О нас</a>
+            <a href="https://github.com/PMPUlecture/PMPUlecture/blob/for_deploy/README.md" class="col-lg row-cols-1" target="_blank">API</a>
+            <a href="#" class="col-lg row-cols-1">FAQ</a>
+            <a href="#" class="col-lg row-cols-1">Пожертвовать</a>
+
+
+        </div>
+      </div>
+    </footer>
     <!-- built files will be auto injected -->
 
     <!-- bootstrap init -->
