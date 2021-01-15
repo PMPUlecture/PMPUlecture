@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <Home/>
+    <Home class="vh-100"/>
 
   </div>
 </template>
