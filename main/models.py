@@ -71,6 +71,10 @@ class Lecturer(models.Model):
             output['vk_discuss_url'] = self.vk_discuss_url
         if materials:
             all_materials = Materials.objects.filter(lecturer=self).order_by('year_of_relevance').reverse()
+
+            if author.is_anonymous:
+                all_materials = all_materials.filter(only_authorized_users=False)
+
             output['materials'] = list()
             if id_subject_for_material:
                 subjects = Subject.objects.filter(lecturer=self, id=id_subject_for_material)
@@ -112,6 +116,7 @@ class Materials(models.Model):
     author = models.ForeignKey(User, blank=True, on_delete=models.SET_NULL, null=True)
     last_update = models.DateTimeField(auto_now=True)
     year_of_relevance = models.IntegerField(default=datetime.now().year)
+    only_authorized_users = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

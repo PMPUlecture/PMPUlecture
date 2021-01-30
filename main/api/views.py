@@ -169,6 +169,7 @@ class MaterialView(View):
     @check_blacklist
     def post(self, request):
         data = json.loads(request.body)
+
         if 'supercode' in data:
             del data['supercode']
         validator = URLValidator()
@@ -236,6 +237,9 @@ class MaterialView(View):
 
         if 'type' in data:
             material.type = data['type']
+
+        if 'only_authorized_users' in data:
+            material.only_authorized_users = data['only_authorized_users']
 
         try:
             material.clean_fields()
