@@ -141,10 +141,10 @@ export default {
       progName: null,
       user: {
         "is_authenticated": false,
-        "email": "ffff@sdsd",
-        "first_name": "Kirill",
-        "last_name": "Lisov",
-        "is_admin": true
+        "email": "",
+        "first_name": "",
+        "last_name": "",
+        "is_admin": false
       },
       searchInput: '',
     }
