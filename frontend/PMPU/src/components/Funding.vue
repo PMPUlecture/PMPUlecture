@@ -6,7 +6,6 @@
       <div class="row">
         <div class="col-3">
           <h5>QIWI</h5>
-          <p>Никнейм кошелька: <span style="cursor: pointer" @click="copy" id="nick" data-toggle="tooltip" data-placement="top" title="Нажммите, чтобы скопировать" class="rounded bg-secondary text-primary p-1">VOLLO172</span></p>
           <p>Перевод с <a target="_blank" href="https://my.qiwi.com/Kyryll-LjbVlZwU0P">карты банка</a></p>
         </div>
       </div>
