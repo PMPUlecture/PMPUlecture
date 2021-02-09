@@ -166,7 +166,7 @@ export default {
       titleField: '',
       linkField: '',
       typeField: '',
-      only_authorized_users: '',
+      only_authorized_users: false,
       nowYear: new Date().getFullYear(),
       year_of_relevance: new Date().getFullYear(),
 
@@ -192,7 +192,7 @@ export default {
         programme: '',
         allLecturers: [],
         currentLecturer: '',
-        only_authorized_users: '',
+        only_authorized_users: false,
       },
 
       user: {
