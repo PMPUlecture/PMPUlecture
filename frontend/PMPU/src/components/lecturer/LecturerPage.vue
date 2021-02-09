@@ -67,7 +67,7 @@
 
             <div class="custom-control custom-switch mt-3 ml-3">
               <input v-model="materialForEdit.only_authorized_users" type="checkbox" class="custom-control-input" id="field10" >
-              <label class="custom-control-label" for="field10">Сделать материал скрытым для неавторизированных пользователей</label>
+              <label class="custom-control-label" for="field10">Сделать материал видимым только для студентов</label>
             </div>
 
           </div>
@@ -142,7 +142,7 @@
 
             <div class="custom-control custom-switch mt-3 ml-3">
               <input v-model="materialForAdd.only_authorized_users" type="checkbox" class="custom-control-input" id="field">
-              <label class="custom-control-label" for="field">Сделать материал скрытым для неавторизированных пользователей</label>
+              <label class="custom-control-label" for="field">Сделать материал видимым только для студентов</label>
             </div>
 
           </div>

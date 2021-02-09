@@ -95,7 +95,7 @@
 
               <div class="custom-control custom-switch mt-3 ml-3">
                 <input v-model="only_authorized_users" type="checkbox" class="custom-control-input" id="field10" :disabled="disableField10">
-                <label class="custom-control-label" for="field10">Сделать материал скрытым для неавторизированных пользователей</label>
+                <label class="custom-control-label" for="field10">Сделать материал видимым только для студентов</label>
               </div>
 
               <div class="text-center mt-3">
@@ -391,6 +391,7 @@ export default {
             this.resetField('linkField', 'disableField7')
             this.resetField('typeField', 'disableField8')
             this.disableField9 = true
+            this.only_authorized_users = false
             this.disableField10 = true
             this.disableButton = true
             ym(70412992,'reachGoal','clickOnAddMaterial')
