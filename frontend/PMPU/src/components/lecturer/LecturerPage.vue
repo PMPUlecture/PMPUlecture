@@ -95,8 +95,10 @@
           <div class="list-group text-break">
             <li class="list-group-item list-group-item-primary">Страница преподавателя на сайте факультета</li>
             <a :href="lecturerInfo.apmath" target="blank" class="list-group-item list-group-item-action"> {{ lecturerInfo.apmath }} </a>
+           <template v-if="lecturerInfo.vk_discuss_url">
             <li class="list-group-item list-group-item-primary">Обсуждение и отзывы в группе ВК</li>
             <a :href="lecturerInfo.vk_discuss_url" target="blank" class="list-group-item list-group-item-action"> {{ lecturerInfo.vk_discuss_url }} </a>
+           </template>
           </div>
 
         </div>
@@ -128,11 +130,13 @@ import axios from "axios";
 import Materials from "./Materials"
 import Loader from "../Loader";
 import variables from "../../views/variables";
+import Term from "../program/Term";
 
 export default {
   name: "LecturerPage",
   props: ['lecturerID',],
   components: {
+    Term,
     Loader,
     Materials,
   },

@@ -12,7 +12,7 @@
         <div class="row d-flex justify-content-center">
           <p class="h5 col-lg row-cols-lg-1" style="max-width: max-content">По вопросам добавления, удаления данных писать на почту</p>
           <div class="rounded bg-primary p-1 pl-2 pr-2 text-white col-lg row-cols-lg-1" style="font-size: medium; max-width: max-content">
-            pmpu-lecture@bk.ru
+            pmpulecture@bk.ru
           </div>
         </div>
       </div>
