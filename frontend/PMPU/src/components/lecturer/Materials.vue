@@ -5,7 +5,7 @@
 
     <div class="row">
 
-      <div class="col" v-if="material.source[0].abstract.length">
+      <div class="col">
         <MaterialBlock :sources="material.source[0].abstract"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'abstract', 'edit')"
@@ -14,7 +14,7 @@
         name="Конспекты"/>
       </div>
 
-      <div class="col" v-if="material.source[0].questions.length">
+      <div class="col">
         <MaterialBlock :sources="material.source[0].questions"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'questions', 'edit')"
@@ -23,7 +23,7 @@
         name="Вопросы"/>
       </div>
 
-      <div class="col" v-if="material.source[0].test.length">
+      <div class="col">
         <MaterialBlock :sources="material.source[0].test"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'test', 'edit')"
@@ -32,7 +32,7 @@
         name="Контрольные"/>
       </div>
 
-      <div class="col" v-if="material.source[0].other.length">
+      <div class="col">
         <MaterialBlock :sources="material.source[0].other"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'other', 'edit')"
