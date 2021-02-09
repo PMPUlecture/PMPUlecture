@@ -127,6 +127,7 @@ class Materials(models.Model):
             'name': self.name,
             'link': self.link,
             'year_of_relevance': self.year_of_relevance,
+            'only_authorized_users': self.only_authorized_users,
         }
         if author:
             if author == self.author or author.groups.filter(name='admin').exists():
