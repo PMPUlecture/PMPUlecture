@@ -42,13 +42,13 @@
 
             <div class="form-group">
 
-              <select v-model="degreeField" class="form-control" id="field1">
+              <select v-model="degreeField" class="form-control custom-select" id="field1">
                 <option selected="true" value="" disabled> Ступень </option>
                 <option> Бакалавриат </option>
                 <option> Магистратура </option>
               </select>
 
-              <select v-model="programField" class="form-control mt-3" id="field2" :disabled="disableField2">
+              <select v-model="programField" class="form-control custom-select mt-3" id="field2" :disabled="disableField2">
                 <option selected="true" value="" disabled> Программа </option>
                 <option v-for="prog in programs" :value="prog.id"> {{prog.name}} </option>
               </select>
@@ -60,13 +60,13 @@
                 </div>
               </div>
 
-              <select v-model="subjectField" class="form-control mt-3" id="field4" :disabled="disableField4">
+              <select v-model="subjectField" class="form-control custom-select mt-3" id="field4" :disabled="disableField4">
                 <option selected="true" value="" disabled> Предмет </option>
                 <option v-for="subject in subjects" :value="subject.id"> {{subject.name}} </option>
               </select>
 
               <div class="row ml-0 mr-0">
-                <select v-model="lecturerField" class="form-control mt-3 col" id="field5" :disabled="disableField5">
+                <select v-model="lecturerField" class="form-control custom-select mt-3 col" id="field5" :disabled="disableField5">
                   <option selected="true" value="" disabled> Лектор </option>
                   <option v-if="!lecturer.length" v-for="lecturer in lecturers" :value="lecturer.id"> {{lecturer.name}} </option>
                 </select>
@@ -85,13 +85,18 @@
 
               </div>
 
-              <select v-model="typeField" class="form-control mt-3" id="field8" :disabled="disableField8">
+              <select v-model="typeField" class="form-control custom-select mt-3" id="field8" :disabled="disableField8">
                 <option selected="true" value="" disabled> Тип материала </option>
                 <option value="abstract"> Конспект </option>
                 <option value="questions"> Вопросы </option>
                 <option value="test"> Контрольная </option>
                 <option value="other"> Другое </option>
               </select>
+
+              <div class="custom-control custom-switch mt-3 ml-3">
+                <input v-model="only_authorized_users" type="checkbox" class="custom-control-input" id="field10" :disabled="disableField10">
+                <label class="custom-control-label" for="field10">Сделать материал скрытым для неавторизированных пользователей</label>
+              </div>
 
               <div class="text-center mt-3">
                 <button type="submit" class="btn btn-primary" :disabled="disableButton"> Отправить </button>
@@ -150,6 +155,7 @@ export default {
       disableField7: true,
       disableField8: true,
       disableField9: true,
+      disableField10: true,
       disableButton: true,
 
       degreeField: '',
@@ -160,6 +166,7 @@ export default {
       titleField: '',
       linkField: '',
       typeField: '',
+      only_authorized_users: '',
       nowYear: new Date().getFullYear(),
       year_of_relevance: new Date().getFullYear(),
 
@@ -185,6 +192,7 @@ export default {
         programme: '',
         allLecturers: [],
         currentLecturer: '',
+        only_authorized_users: '',
       },
 
       user: {
@@ -234,6 +242,7 @@ export default {
         this.disableField7 = false
         this.disableField8 = false
         this.disableField9 = false
+        this.disableField10 = false
 
       }
     },
@@ -251,7 +260,7 @@ export default {
     }
   },
   created() {
-    this.getUser()
+    //this.getUser()
   },
   methods: {
     getUser() {
@@ -274,6 +283,7 @@ export default {
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
       this.disableField9 = true
+      this.disableField10 = true
       this.disableButton = true
 
       if (this.degreeField != '') {
@@ -301,6 +311,7 @@ export default {
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
       this.disableField9 = true
+      this.disableField10 = true
       this.disableButton = true
 
       if (this.semesterField != '') {
@@ -327,6 +338,7 @@ export default {
       this.resetField('linkField', 'disableField7')
       this.resetField('typeField', 'disableField8')
       this.disableField9 = true
+      this.disableField10 = true
       this.disableButton = true
 
       if (this.subjectField != '') {
@@ -362,11 +374,13 @@ export default {
       this.material.lecturer = this.lecturerField
       this.material.link = this.linkField
       this.material.year_of_relevance = this.year_of_relevance
+      this.material.only_authorized_users = this.only_authorized_users
 
       const str = JSON.stringify(this.material);
 
       axios.post(variables.url + '/api/material/', str)
         .then((response) => {
+          console.log(response.data)
           if (response.data.status === 'ok') {
             this.degreeField = ''
             this.resetField('programField', 'disableField2')
@@ -377,6 +391,7 @@ export default {
             this.resetField('linkField', 'disableField7')
             this.resetField('typeField', 'disableField8')
             this.disableField9 = true
+            this.disableField10 = true
             this.disableButton = true
             ym(70412992,'reachGoal','clickOnAddMaterial')
             this.toasts.title = "Успех";
