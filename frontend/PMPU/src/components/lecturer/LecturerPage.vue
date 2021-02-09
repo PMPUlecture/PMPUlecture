@@ -65,6 +65,11 @@
               </select>
             </div>
 
+            <div class="custom-control custom-switch mt-3 ml-3">
+              <input v-model="materialForEdit.only_authorized_users" type="checkbox" class="custom-control-input" id="field10" :disabled="disableField10">
+              <label class="custom-control-label" for="field10">Сделать материал скрытым для неавторизированных пользователей</label>
+            </div>
+
           </div>
 
           <div class="modal-footer d-flex justify-content-end">
@@ -141,6 +146,7 @@ export default {
         name: '',
         link: '',
         type: '',
+        materialForEdit: '',
       }
     }
   },

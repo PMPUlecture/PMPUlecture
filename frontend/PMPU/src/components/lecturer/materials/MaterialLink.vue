@@ -2,10 +2,9 @@
   <div>
     <div class=" d-flex">
       <a target="_blank" :href="source.link" class="d-inline-flex justify-content-between flex-grow-1">
-        <p class="m-0 mr-auto text-wrap">{{source.name}}</p>
+        <p class="m-0 mr-auto text-wrap">{{source.name}} <i v-if="source.only_authorized_users" class="fas fa-crown ml-1 text-warning" title="Этот материал виден только студентам"></i></p>
         <p class="m-0 ml-3 text-muted" >{{source.year_of_relevance}}</p>
       </a>
-      <!-- v-if="source.is_author" -->
       <div v-if="source.is_author" class="m-0 ml-2">
         <a class="text-warning text-decoration-none delete" v-on:click="edit">
           <i class="fas fa-pen"></i>
@@ -31,7 +30,8 @@ export default {
         name: this.source.name,
         link: this.source.link,
         year_of_relevance: this.source.year_of_relevance,
-        type: ''
+        type: '',
+        only_authorized_users: this.source.only_authorized_users,
       }
       this.$emit('edit', event)
     },
