@@ -66,7 +66,7 @@
             </div>
 
             <div class="custom-control custom-switch mt-3 ml-3">
-              <input v-model="materialForEdit.only_authorized_users" type="checkbox" class="custom-control-input" id="field10" :disabled="disableField10">
+              <input v-model="materialForEdit.only_authorized_users" type="checkbox" class="custom-control-input" id="field10" >
               <label class="custom-control-label" for="field10">Сделать материал скрытым для неавторизированных пользователей</label>
             </div>
 
@@ -76,6 +76,80 @@
             <button type="button" class="btn btn-danger mr-auto" v-on:click="deleteMaterial">Удалить</button>
             <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
             <button type="button" class="btn btn-success" v-on:click="editMaterial">Применить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL for add -->
+    <div class="modal fade" id="modal_for_add_material" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Добавить материал</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label" >Предмет</span>
+              </div>
+              <input type="text" class="form-control text-primary" :value="subjectNameForAdd" disabled>
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label" >Лектор</span>
+              </div>
+              <input type="text" class="form-control text-primary" :value="lecturerInfo.name" disabled>
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Название</span>
+              </div>
+              <input type="text" class="form-control text-primary" v-model="materialForAdd.name">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Ссылка</span>
+              </div>
+              <input type="text" class="form-control text-primary" v-model="materialForAdd.link">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Год</span>
+              </div>
+              <input type="number" class="form-control text-primary" v-model="materialForAdd.year_of_relevance">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text label">Тип</span>
+              </div>
+              <select class="form-control custom-select text-primary" disabled>
+                <option value="abstract" :selected="materialForAdd.type === 'abstract'"> Конспект </option>
+                <option value="questions" :selected="materialForAdd.type === 'questions'"> Вопросы </option>
+                <option value="test" :selected="materialForAdd.type === 'test'"> Контрольная </option>
+                <option value="other" :selected="materialForAdd.type === 'other'"> Другое </option>
+              </select>
+            </div>
+
+            <div class="custom-control custom-switch mt-3 ml-3">
+              <input v-model="materialForAdd.only_authorized_users" type="checkbox" class="custom-control-input" id="field">
+              <label class="custom-control-label" for="field">Сделать материал скрытым для неавторизированных пользователей</label>
+            </div>
+
+          </div>
+
+          <div class="modal-footer d-flex justify-content-end">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Отмена</button>
+            <button type="button" class="btn btn-success" v-on:click="addMaterial">Отправить</button>
           </div>
         </div>
       </div>
@@ -109,10 +183,11 @@
       <Materials
         v-for="material in lecturerInfo.materials"
         :material="material"
-        :subjectID="subjID"
+        :subjectID="subjectID"
         :lecturerID="lecturerID"
         v-on:remove="openModalDelete($event)"
         v-on:edit="openModelEdit($event)"
+        v-on:add="openModalAdd($event)"
       />
       <div class="row">
         <button v-if="lecturerInfo.the_rest_of_materials" id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
@@ -142,7 +217,7 @@ export default {
   },
   data() {
     return {
-      lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null},
+      lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null, the_rest_of_materials: 0},
       subjectID: this.$route.query.subjectID,
       loading: true,
       materialForEdit:{
@@ -150,8 +225,18 @@ export default {
         name: '',
         link: '',
         type: '',
-        materialForEdit: '',
-      }
+        only_authorized_users: ''
+      },
+      materialForAdd: {
+        lecturer: '',
+        subject: '',
+        name: '',
+        type: '',
+        link: '',
+        year_of_relevance: new Date().getFullYear(),
+        only_authorized_users: false
+      },
+      subjectNameForAdd: '',
     }
   },
   created() {
@@ -171,6 +256,13 @@ export default {
     openModelEdit(material){
       this.materialForEdit = material
       $('#modal_for_edit_material').modal('show')
+    },
+    openModalAdd(data){
+      this.materialForAdd.subject = data.subject
+      this.materialForAdd.type = data.type
+      this.materialForAdd.lecturer = this.lecturerInfo.id
+      this.subjectNameForAdd = data.subject_name
+      $('#modal_for_add_material').modal('show')
     },
 
     deleteMaterial() {
@@ -204,6 +296,19 @@ export default {
         }
       })
     },
+    addMaterial(){
+      axios.post(variables.url + '/api/material/', this.materialForAdd
+      )
+        .then((response) => {
+          if (response.data.status === 'ok'){
+            this.getLecturerInfo(this.lecturerID)
+            $('#modal_for_add_material').modal('hide')
+          }
+          else{
+            alert(response.data.error)
+          }
+        })
+    },
     getLecturerInfo(lecturerID) {
       axios.get(variables.url + '/api/lecturers/', {
         params: {
@@ -231,7 +336,7 @@ export default {
       })
         .then(response => {
           this.lecturerInfo.materials = response.data[0].materials
-          document.getElementById("getAll").classList.add('invisible');
+          this.lecturerInfo.the_rest_of_materials = response.data[0].the_rest_of_materials
         })
         .catch(error => {
           console.log(error);

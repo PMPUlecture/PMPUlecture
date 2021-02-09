@@ -1,6 +1,9 @@
 <template>
   <div class="card bg-light mb-3" >
-    <div class="card-header"> {{ name }} </div>
+    <div class="card-header d-flex">
+      <span>{{ name }}</span>
+      <a class="ml-auto cursor-pointer text-dark mr-2" @click="$emit('add', {'subject': '', 'type': ''})"><i class="fas fa-plus"></i></a>
+    </div>
     <div class="card-body">
       <MaterialLink v-for="source in this.sources" :source="source" v-on:remove="$emit('remove', $event)"
                     v-on:edit="$emit('edit', $event)"></MaterialLink>
@@ -21,5 +24,7 @@ name: "MaterialBlock",
 </script>
 
 <style scoped>
-
+.cursor-pointer{
+  cursor: pointer;
+}
 </style>
