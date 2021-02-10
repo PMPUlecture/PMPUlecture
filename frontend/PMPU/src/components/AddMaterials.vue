@@ -195,13 +195,7 @@ export default {
         only_authorized_users: false,
       },
 
-      user: {
-        "is_authenticated": true,
-        "email": "",
-        "first_name": "",
-        "last_name": "",
-        "is_admin": false
-      },
+      user: variables.user,
     }
   },
   watch: {
@@ -259,20 +253,7 @@ export default {
       }
     }
   },
-  created() {
-    //this.getUser()
-  },
   methods: {
-    getUser() {
-      axios.get(variables.url + '/api/user/')
-        .then(response => {
-          this.user = response.data
-        })
-        .catch(error => {
-          console.log(error);
-        })
-    },
-
     getPrograms() {
 
       this.resetField('programField', 'disableField2')

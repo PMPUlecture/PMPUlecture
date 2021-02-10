@@ -157,6 +157,7 @@ export default {
       axios.get(variables.url + '/api/user/')
         .then(response => {
           this.user = response.data
+          variables.user = response.data
         })
         .catch(error => {
           console.log(error);

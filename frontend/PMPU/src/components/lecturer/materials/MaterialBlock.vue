@@ -13,12 +13,15 @@
 
 <script>
 import MaterialLink from "./MaterialLink";
+import variables from "../../../views/variables";
 export default {
 name: "MaterialBlock",
   components: {MaterialLink},
   props: ['name', 'sources'],
-  comments: {
-    MaterialLink
+  data() {
+  return {
+    user: variables.user
+  }
   }
 }
 </script>
