@@ -59,7 +59,9 @@
 
               <template v-if="user.is_authenticated && user.is_admin">
                 <div class="card text-white bg-success mt-3 mb-3">
-                  <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
+                  <a href="/admin/" style="text-decoration: none" class="text-white">
+                    <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
+                  </a>
                   <div class="card-body">
                     <h4 class="card-title">Вы являетесь администратором</h4>
                     <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
