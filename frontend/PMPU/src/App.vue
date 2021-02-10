@@ -10,7 +10,7 @@
           <router-link to="/funding" class="col-lg row-cols-1 text-center">Пожертвовать</router-link>
         </div>
         <div class="row d-flex justify-content-center">
-          <p class="h5 col-lg row-cols-lg-1" style="max-width: max-content">По вопросам добавления, удаления данных писать на почту</p>
+          <p class="h5 col-lg row-cols-lg-1" style="max-width: max-content">По всем вопросам писать на почту</p>
           <div class="rounded bg-primary p-1 pl-2 pr-2 text-white col-lg row-cols-lg-1" style="font-size: medium; max-width: max-content">
             pmpulecture@bk.ru
           </div>

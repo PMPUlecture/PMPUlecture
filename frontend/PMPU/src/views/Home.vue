@@ -80,7 +80,7 @@
                     <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
                       <div class="card-body">
                         <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
-                        <p class="card-text">Метериалы, видимые только студентами помечаются значком <i class="fas fa-eye text-warning"></i>. .</p>
+                        <p class="card-text">Материалы, видимые только студентами помечаются значком <i class="fas fa-eye text-warning"></i>. .</p>
                         <p>Можете продолжить смотреть учебные материалы или добавить свои тут</p>
 
                         <div class="d-flex justify-content-between">
