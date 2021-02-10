@@ -337,6 +337,7 @@ export default {
         .then(response => {
           this.lecturerInfo.materials = response.data[0].materials
           this.lecturerInfo.the_rest_of_materials = response.data[0].the_rest_of_materials
+          ym(70412992,'reachGoal','clickOnAddMaterial')
         })
         .catch(error => {
           console.log(error);

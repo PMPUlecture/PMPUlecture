@@ -2,7 +2,7 @@
   <div class="card bg-light mb-3" >
     <div class="card-header d-flex">
       <span>{{ name }}</span>
-      <a class="ml-auto cursor-pointer text-dark mr-2" @click="$emit('add', {'subject': '', 'type': ''})"><i class="fas fa-plus"></i></a>
+      <a v-if="user.is_authenticated" class="ml-auto cursor-pointer text-dark mr-2" @click="$emit('add', {'subject': '', 'type': ''})"><i class="fas fa-plus"></i></a>
     </div>
     <div class="card-body">
       <MaterialLink v-for="source in this.sources" :source="source" v-on:remove="$emit('remove', $event)"
