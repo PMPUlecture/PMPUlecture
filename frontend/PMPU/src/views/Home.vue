@@ -26,8 +26,8 @@
 
         <!-- Форма для неавторизированных пользователей -->
         <div v-else class="bg-warning p-2 rounded d-flex flex-row justify-content-between">
-          <span class="m-auto">Вход не выполнен</span>
-          <a class="btn btn-danger" href="/account/login/google-oauth2/"><i class='fab fa-google'></i></a>
+          <span class="text-center">Войдите, чтобы видеть больше материалов и добавлять новые</span>
+          <a class="btn btn-danger mt-auto mb-auto" href="/account/login/google-oauth2/"><i class='fab fa-google' style="font-size: large"></i></a>
         </div>
       </div>
 
@@ -80,7 +80,8 @@
                     <h3 class="card-header text-center"><b>{{user.first_name}} {{user.last_name}}</b></h3>
                       <div class="card-body">
                         <h4 class="card-title">Добро пожаловать {{user.email}}</h4>
-                        <p class="card-text">Можете продолжить смотреть учебные материалы или добавить свои тут</p>
+                        <p class="card-text">Метериалы, видимые только студентами помечаются значком <i class="fas fa-eye text-warning"></i>. .</p>
+                        <p>Можете продолжить смотреть учебные материалы или добавить свои тут</p>
 
                         <div class="d-flex justify-content-between">
                           <router-link :to="'/add_materials'">
@@ -97,7 +98,8 @@
                   <div class="card text-white bg-warning mt-3 mb-3">
                   <div class="card-body">
                     <h4 class="card-title">Вход не выполнен</h4>
-                    <p class="card-text">Вы не вошли на сайт. Вы можете просматривать метериалы, но чтобы добавить свои
+                    <p class="card-text">Вы не вошли на сайт.</p>
+                    <p class="card-text">Вы можете просматривать материалы, но чтобы видеть дополнительные и добавлять свои
                     необходимо войти.</p>
                     <a class="btn btn-danger" href="/account/login/google-oauth2/">Вход через Google</a>
 

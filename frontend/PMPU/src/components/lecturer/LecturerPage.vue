@@ -179,6 +179,8 @@
       </div>
     </div>
 
+    <span v-if="user.is_authenticated" class="p-3 text-primary font-weight-bold row text-center d-lg-none d-block">Значком <i class=" mr-1 ml-1 fas fa-eye text-warning"></i> обозначаются материалы, видимые только студентам</span>
+
     <div v-if="!loading" class="container-fluid">
       <Materials
         v-for="material in lecturerInfo.materials"
@@ -189,6 +191,7 @@
         v-on:edit="openModelEdit($event)"
         v-on:add="openModalAdd($event)"
       />
+      <span v-if="!user.is_authenticated" class="bg-light-warning rounded-pill p-3 text-primary font-weight-bold row justify-content-center">Здесь не всё! <a class="text-black-50 ml-1 mr-1" href="/account/login/google-oauth2/">Войдите</a> чтобы видеть больше.</span>
       <div class="row">
         <button v-if="lecturerInfo.the_rest_of_materials" id="getAll" class="btn btn-outline-primary m-2 mt-5 col" v-on:click="getMaterials">Показать все материалы</button>
       </div>
@@ -220,6 +223,7 @@ export default {
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null, the_rest_of_materials: 0},
       subjectID: this.$route.query.subjectID,
       loading: true,
+      user: variables.user,
       materialForEdit:{
         id: '',
         name: '',
@@ -357,4 +361,7 @@ img {
   width: 90px;
 }
 
+.bg-light-warning{
+  background-color: #f5c44e;
+}
 </style>
