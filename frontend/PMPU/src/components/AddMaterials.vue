@@ -141,7 +141,7 @@
 
 <script>
 import axios from "axios";
-import variables from "../views/variables"; variables
+import variables from "../views/variables";
 
 export default {
   name: "AddMaterials",
@@ -195,7 +195,7 @@ export default {
         only_authorized_users: false,
       },
 
-      user: variables.user,
+      user: {},
     }
   },
   watch: {
@@ -253,7 +253,20 @@ export default {
       }
     }
   },
+  created() {
+    this.getUser()
+  },
   methods: {
+    getUser() {
+      axios.get(variables.url + '/api/user/')
+        .then(response => {
+          this.user = response.data
+          variables.user = response.data
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    },
     getPrograms() {
 
       this.resetField('programField', 'disableField2')

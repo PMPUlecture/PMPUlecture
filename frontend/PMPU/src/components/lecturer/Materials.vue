@@ -7,6 +7,7 @@
 
       <div class="col">
         <MaterialBlock :sources="material.source[0].abstract"
+                       :user="user"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'abstract', 'edit')"
                        v-on:add="$emit('add', {'subject': material.id_subject,
@@ -16,6 +17,7 @@
 
       <div class="col">
         <MaterialBlock :sources="material.source[0].questions"
+                       :user="user"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'questions', 'edit')"
                        v-on:add="$emit('add', {'subject': material.id_subject,
@@ -25,6 +27,7 @@
 
       <div class="col">
         <MaterialBlock :sources="material.source[0].test"
+                       :user="user"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'test', 'edit')"
                        v-on:add="$emit('add', {'subject': material.id_subject,
@@ -34,6 +37,7 @@
 
       <div class="col">
         <MaterialBlock :sources="material.source[0].other"
+                       :user="user"
                        v-on:remove="$emit('remove', $event)"
                        v-on:edit="addType($event, 'other', 'edit')"
                        v-on:add="$emit('add', {'subject': material.id_subject,
@@ -54,7 +58,7 @@ export default {
   components: {
     MaterialBlock
   },
-  props: ['material'],
+  props: ['material', 'user'],
 
   methods: {
     addType(event, type, name_of_event){

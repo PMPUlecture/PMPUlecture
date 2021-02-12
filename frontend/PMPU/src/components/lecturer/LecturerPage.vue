@@ -185,8 +185,7 @@
       <Materials
         v-for="material in lecturerInfo.materials"
         :material="material"
-        :subjectID="subjectID"
-        :lecturerID="lecturerID"
+        :user="user"
         v-on:remove="openModalDelete($event)"
         v-on:edit="openModelEdit($event)"
         v-on:add="openModalAdd($event)"
@@ -223,7 +222,7 @@ export default {
       lecturerInfo: {photo: null, name: null, apmath: null, vk_discuss_url: null, the_rest_of_materials: 0},
       subjectID: this.$route.query.subjectID,
       loading: true,
-      user: variables.user,
+      user: {},
       materialForEdit:{
         id: '',
         name: '',
@@ -244,7 +243,7 @@ export default {
     }
   },
   created() {
-    console.log(this.currentsubject1)
+    this.getUser()
     this.getLecturerInfo(this.lecturerID)
   },
   beforeRouteUpdate (to, from, next) {
@@ -252,6 +251,16 @@ export default {
     this.getLecturerInfo(this.lecturerID);
   },
   methods: {
+    getUser() {
+      axios.get(variables.url + '/api/user/')
+        .then(response => {
+          this.user = response.data
+          variables.user = response.data
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    },
     openModalDelete(material){
       this.materialForEdit = material
       $('#modal_for_material').modal('show')

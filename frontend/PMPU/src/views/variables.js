@@ -1,5 +1,5 @@
 export default {
-  url: '',
+  url: 'http://127.0.0.1:8000',
   user: {
     "is_authenticated": false,
     "email": "",

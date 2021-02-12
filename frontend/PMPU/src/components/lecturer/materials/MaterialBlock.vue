@@ -13,19 +13,12 @@
 
 <script>
 import MaterialLink from "./MaterialLink";
-import variables from "../../../views/variables";
 export default {
 name: "MaterialBlock",
   components: {MaterialLink},
-  props: ['name', 'sources'],
-  data() {
-  return {
-    user: variables.user
-  }
-  }
+  props: ['name', 'sources', 'user'],
 }
 </script>
-
 <style scoped>
 .cursor-pointer{
   cursor: pointer;
