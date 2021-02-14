@@ -11,9 +11,10 @@ import os
 def check_authorization(func):
     def wrapper(self, request, *args):
         if not request.user.is_authenticated and \
-            json.loads(request.body).get('supercode') != os.environ.get('SUPERCODE'):
+                json.loads(request.body).get('supercode') != os.environ.get('SUPERCODE'):
             return {'status': 'error', 'error': 'Permission denied'}
         return func(self, request, *args)
+
     return wrapper
 
 
@@ -22,6 +23,7 @@ def check_blacklist(func):
         if request.user.groups.filter(name='black list').exists():
             return {'status': 'error', 'error': 'Blacklisted user'}
         return func(self, request, *args)
+
     return wrapper
 
 
@@ -33,11 +35,109 @@ def JSON_response(func):
         response.setdefault('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
         response.setdefault('Access-Control-Allow-Headers', 'Content-Type')
         return response
+
     return wrapper
 
 
 def list_of_fields(string: str):
     return string.replace(' ', '').split(',')
+
+
+class UserDetail(View):
+    @JSON_response
+    def get(self, request):
+        response = {"is_authenticated": request.user.is_authenticated}
+        if response["is_authenticated"]:
+            response.update(email=request.user.email,
+                            first_name=request.user.first_name,
+                            last_name=request.user.last_name,
+                            is_admin=request.user.groups.filter(name='admin').exists()
+                            )
+
+        return response
+
+
+class ProgrammeView(View):
+    @JSON_response
+    def get(self, request):
+        """params: fields=img_url"""
+        is_img_url = bool(request.GET.get('fields'))
+        queryset = Programme.objects.all()
+        output = dict()
+        for degree in Programme.TypeOfDegrees.choices:
+            output[degree[0]] = [obj.as_dict(img_url=is_img_url) for obj in queryset.filter(degree=degree[0])]
+        return output
+
+
+class SubjectsView(View):
+    subjects = Subject.objects.all()
+
+    @JSON_response
+    def get(self, request):
+        """params:
+        fields=lecturers,term,programme
+        lecturer :id
+        term :int
+        programme :id
+        id :id
+        """
+        if request.GET.get("id"):
+            self.subjects = self.subjects.filter(pk=request.GET.get("id"))
+        if request.GET.get('lecturer'):
+            self.subjects = self.subjects.filter(lecturer=request.GET.get('lecturer'))
+        if request.GET.get('term'):
+            self.subjects = self.subjects.filter(term=request.GET.get('term'))
+        if request.GET.get('programme'):
+            self.subjects = self.subjects.filter(programme=request.GET.get('programme'))
+
+        fields = []
+        if request.GET.get('fields'):
+            fields = list_of_fields(request.GET.get('fields'))
+        is_lecturers = 'lecturers' in fields
+        is_term = 'term' in fields
+        is_programme = 'programme' in fields
+
+        if self.subjects:
+            output = dict()
+            if request.GET.get('programme'):
+                try:
+                    output['programme'] = Programme.objects.get(pk=request.GET.get('programme')).name
+                except Programme.DoesNotExist:
+                    return {'error': 'there are no such programme'}
+            if is_term:
+                output["terms"] = [{'term': term, 'subjects':
+                    [subj.as_dict(lecturer=is_lecturers, programme=is_programme) for subj in
+                     self.subjects.filter(term=term)]}
+                                   for term in range(1, 9)]
+            else:
+                output['subjects'] = [subj.as_dict(lecturer=is_lecturers, programme=is_programme)
+                                      for subj in self.subjects]
+            return output
+        else:
+            return {'error': 'there are no such subjects'}
+
+    @JSON_response
+    @check_authorization
+    @check_blacklist
+    def post(self, request):
+        data = json.loads(request.body)
+        if 'supercode' in data:
+            del data['supercode']
+        data['programme'] = Programme.objects.filter(id=data['programme']).first()
+        if not data['programme']:
+            return {'status': 'error', 'error': 'there is no such programme'}
+
+        data['term'] = int(data['term'])
+        if data['term'] not in range(1, 9):
+            return {'status': 'error', 'error': 'term should be between 1 and 8'}
+
+        new_subject = Subject.objects.create(**data)
+        try:
+            new_subject.clean_fields()
+        except ValidationError as e:
+            return {'status': 'error', 'error': e.message_dict}
+
+        return {'status': 'ok'}
 
 
 class LecturerView(View):
@@ -91,11 +191,14 @@ class LecturerView(View):
                 return {'status': 'error', 'error': 'there is no such subjects'}
             del data['subjects']
 
-        if 'apmath_url' in data and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
+        if 'apmath_url' in data and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith(
+                'https://'):
             data['apmath_url'] = "http://" + data['apmath_url']
-        if 'vk_discuss_url' in data and not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
+        if 'vk_discuss_url' in data and not data['vk_discuss_url'].startswith('http://') and not data[
+            'vk_discuss_url'].startswith('https://'):
             data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
-        if 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+        if 'photo_url' in data and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith(
+                'https://'):
             data['photo_url'] = "http://" + data['photo_url']
 
         new_lecturer = Lecturer.objects.create(**data)
@@ -121,12 +224,15 @@ class LecturerView(View):
         if not lecturer:
             return {'status': 'error', 'error': 'there is no such lecturer'}
 
-        if request.user.groups.filter(name='admin').exists(): # Изменение всех полей доступно только админам
-            if data.get('apmath_url') and not data['apmath_url'].startswith('http://') and not data['apmath_url'].startswith('https://'):
+        if request.user.groups.filter(name='admin').exists():  # Изменение всех полей доступно только админам
+            if data.get('apmath_url') and not data['apmath_url'].startswith('http://') and not data[
+                'apmath_url'].startswith('https://'):
                 data['apmath_url'] = "http://" + data['apmath_url']
-            if data.get('vk_discuss_url') and not data['vk_discuss_url'].startswith('http://') and not data['vk_discuss_url'].startswith('https://'):
+            if data.get('vk_discuss_url') and not data['vk_discuss_url'].startswith('http://') and not data[
+                'vk_discuss_url'].startswith('https://'):
                 data['vk_discuss_url'] = "http://" + data['vk_discuss_url']
-            if data.get('photo_url') and not data['photo_url'].startswith('http://') and not data['photo_url'].startswith('https://'):
+            if data.get('photo_url') and not data['photo_url'].startswith('http://') and not data[
+                'photo_url'].startswith('https://'):
                 data['photo_url'] = "http://" + data['photo_url']
 
             lecturer.name = data.get('name') or lecturer.name
@@ -148,19 +254,6 @@ class LecturerView(View):
 
         lecturer.save()
         return {'status': 'ok'}
-
-
-class UserDetail(View):
-    @JSON_response
-    def get(self, request):
-        response = {"is_authenticated": request.user.is_authenticated}
-        if response["is_authenticated"]:
-            response.update(email=request.user.email,
-                            first_name=request.user.first_name,
-                            last_name=request.user.last_name,
-                            is_admin=request.user.groups.filter(name='admin').exists()),
-
-        return response
 
 
 class MaterialView(View):
@@ -269,85 +362,3 @@ class MaterialView(View):
         material.delete()
 
         return {'status': 'ok'}
-
-
-class SubjectsView(View):
-    subjects = Subject.objects.all()
-
-    @JSON_response
-    def get(self, request):
-        """params:
-        fields=lecturers,term,programme
-        lecturer :id
-        term :int
-        programme :id
-        id :id
-        """
-        if request.GET.get("id"):
-            self.subjects = self.subjects.filter(pk=request.GET.get("id"))
-        if request.GET.get('lecturer'):
-            self.subjects = self.subjects.filter(lecturer=request.GET.get('lecturer'))
-        if request.GET.get('term'):
-            self.subjects = self.subjects.filter(term=request.GET.get('term'))
-        if request.GET.get('programme'):
-            self.subjects = self.subjects.filter(programme=request.GET.get('programme'))
-
-        fields = []
-        if request.GET.get('fields'):
-            fields = list_of_fields(request.GET.get('fields'))
-        is_lecturers = 'lecturers' in fields
-        is_term = 'term' in fields
-        is_programme = 'programme' in fields
-
-        if self.subjects:
-            output = dict()
-            if request.GET.get('programme'):
-                try:
-                    output['programme'] = Programme.objects.get(pk=request.GET.get('programme')).name
-                except Programme.DoesNotExist:
-                    return {'error': 'there are no such programme'}
-            if is_term:
-                output["terms"] = [{'term': term, 'subjects':
-                    [subj.as_dict(lecturer=is_lecturers, programme=is_programme) for subj in self.subjects.filter(term=term)]}
-                                   for term in range(1, 9)]
-            else:
-                output['subjects'] = [subj.as_dict(lecturer=is_lecturers, programme=is_programme)
-                                      for subj in self.subjects]
-            return output
-        else:
-            return {'error': 'there are no such subjects'}
-
-    @JSON_response
-    @check_authorization
-    @check_blacklist
-    def post(self, request):
-        data = json.loads(request.body)
-        if 'supercode' in data:
-            del data['supercode']
-        data['programme'] = Programme.objects.filter(id=data['programme']).first()
-        if not data['programme']:
-            return {'status': 'error', 'error': 'there is no such programme'}
-
-        data['term'] = int(data['term'])
-        if data['term'] not in range(1, 9):
-            return {'status': 'error', 'error': 'term should be between 1 and 8'}
-
-        new_subject = Subject.objects.create(**data)
-        try:
-            new_subject.clean_fields()
-        except ValidationError as e:
-            return {'status': 'error', 'error': e.message_dict}
-
-        return {'status': 'ok'}
-
-
-class ProgrammeView(View):
-    @JSON_response
-    def get(self, request):
-        """params: fields=img_url"""
-        is_img_url = bool(request.GET.get('fields'))
-        queryset = Programme.objects.all()
-        output = dict()
-        for degree in Programme.TypeOfDegrees.choices:
-            output[degree[0]] = [obj.as_dict(img_url=is_img_url) for obj in queryset.filter(degree=degree[0])]
-        return output
