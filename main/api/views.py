@@ -10,10 +10,11 @@ import os
 
 def check_authorization(func):
     def wrapper(self, request, *args):
-        if not request.user.is_authenticated and \
-                json.loads(request.body).get('supercode') != os.environ.get('SUPERCODE'):
-            return {'status': 'error', 'error': 'Permission denied'}
-        return func(self, request, *args)
+        if os.environ.get('SUPERCODE') is not None and \
+                json.loads(request.body).get('supercode') == os.environ.get('SUPERCODE') or request.user.is_authenticated:
+            return func(self, request, *args)
+
+        return {'status': 'error', 'error': 'Permission denied'}
 
     return wrapper
 
