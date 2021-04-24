@@ -4,7 +4,7 @@ from main.models import Programme, Subject, Lecturer, Materials
 from django.contrib.auth.models import AnonymousUser
 
 
-class ProgrammeTestCase(TestCase):
+class ModelsTestCase(TestCase):
     def setUp(self) -> None:
         prog1 = Programme.objects.create(name="First programme", degree="bachelor", img_url="https://picsum.photos/500")
         prog2 = Programme.objects.create(name="Second programme", degree="master", img_url="https://picsum.photos/500")
