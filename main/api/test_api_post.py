@@ -34,7 +34,6 @@ class SubjectTestCase(TestCase):
 
     def test_trying_create_incorrect_subject(self):
         c = Client()
-        print(len(Subject.objects.all()))
         c.login(email="r@r.com", password="password")
         r = c.post('/api/subjects/', data=json.dumps({'programme': 5, 'term': 1, 'name': 'subject1'}),
                    content_type="application/json").json()
@@ -58,3 +57,73 @@ class LecturerTestCase(TestCase):
 
     def test_create_leccturer(self):
         c = Client()
+        r = c.post('/api/lecturers/', data=json.dumps({
+            'name': 'lecturer',
+            'subjects': [1, 2],
+            'photo_url': 'https://picsum.photos/500',
+            'apmath_url': 'https://apmath.ru',
+            'vk_discuss_url': 'https://vk.com'
+        }), content_type="application/json").json()
+        self.assertDictEqual(r, {'status': 'error', 'error': 'Permission denied'}, msg='not auth')
+        lecturers = Lecturer.objects.all()
+        self.assertEqual(len(lecturers), 0, msg="not auth")
+
+        c.login(email="r@r.com", password="password")
+        r = c.post('/api/lecturers/', data=json.dumps({
+            'name': 'lecturer',
+            'subjects': [1, 2],
+            'photo_url': 'https://picsum.photos/500',
+            'apmath_url': 'https://apmath.ru',
+            'vk_discuss_url': 'https://vk.com'
+        }), content_type="application/json").json()
+        self.assertDictEqual(r, {'status': 'ok'}, msg='auth')
+        lecturers = Lecturer.objects.all()
+        self.assertEqual(len(lecturers), 1, msg='auth')
+
+    def test_create_incorrect_lecturers(self):
+        c = Client()
+        c.login(email="r@r.com", password="password")
+
+        r = c.post('/api/lecturers/', data=json.dumps({
+            'name': 'lecturer22',
+            'subjects': [],
+            'photo_url': 'https://picsum.photos/500',
+            'apmath_url': 'https://apmath.ru',
+            'vk_discuss_url': 'https://vk.com'
+        }), content_type="application/json").json()
+        self.assertDictEqual(r, {'status': 'error', 'error': 'there is no such subjects'}, msg='no subjects')
+        lecturers = Lecturer.objects.all()
+        self.assertEqual(len(lecturers), 0, msg='auth')
+
+        r = c.post('/api/lecturers/', data=json.dumps({
+            'name': 'lecturer',
+            'subjects': [1, 2],
+            'photo_url': 'picsumphotos/500',
+            'apmath_url': 'https://apmath.ru',
+            'vk_discuss_url': 'https://vk.com'
+        }), content_type="application/json").json()
+        self.assertEqual(r['status'], 'error', msg='invalid url')
+        lecturers = Lecturer.objects.all()
+        self.assertEqual(len(lecturers), 0, msg='invalid url')
+
+        r = c.post('/api/lecturers/', data=json.dumps({
+            'name': 'lecturer',
+            'subjects': [],
+            'photo_url': 'picsumphotos/500',
+            'apmath_url': 'apmathu',
+            'vk_discuss_url': 'vk.om'
+        }), content_type="application/json").json()
+        self.assertEqual(r['status'], 'error', msg='invalid url')
+        lecturers = Lecturer.objects.all()
+        self.assertEqual(len(lecturers), 0, msg='invalid url')
+
+        r = c.post('/api/lecturers/', data=json.dumps({
+            'name': 'lecturer22',
+            'subjects': [4,6],
+            'photo_url': 'https://picsum.photos/500',
+            'apmath_url': 'https://apmath.ru',
+            'vk_discuss_url': 'https://vk.com'
+        }), content_type="application/json").json()
+        self.assertDictEqual(r, {'status': 'error', 'error': 'there is no such subjects'}, msg='no subjects')
+        lecturers = Lecturer.objects.all()
+        self.assertEqual(len(lecturers), 0, msg='auth')
