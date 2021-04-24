@@ -402,3 +402,248 @@ class SubjectsApiTestCase(TestCase):
                 ]
         }, msg='by programme')
 
+
+class LecturerApiTestCase(TestCase):
+    def setUp(self) -> None:
+        generate_test_database()
+
+    def test_get_lecturers(self):
+        c = Client()
+        r = c.get("/api/lecturers/").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 0
+            },
+            {
+                'id': 2,
+                'name': "Lecturer2",
+                "the_rest_of_materials": 0
+            },
+        ])
+
+    def test_get_lecturers_with_subjects(self):
+        c = Client()
+        r = c.get("/api/lecturers/?fields=subjects").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 0,
+                'subjects':
+                    [
+                        {
+                            'id': 1,
+                            'name': 'subject1'
+                        },
+                        {
+                            'id': 2,
+                            'name': 'subject2'
+                        }
+                    ]
+            },
+            {
+                'id': 2,
+                'name': "Lecturer2",
+                "the_rest_of_materials": 0,
+                'subjects':
+                [
+                    {
+                        'id': 2,
+                        'name': 'subject2'
+                    }
+                ]
+            },
+        ])
+
+    def test_get_lecturers_with_materials(self):
+        c = Client()
+        r = c.get("/api/lecturers/?fields=materials").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 0,
+                'materials':
+                [
+                    {
+                        'id_subject': 1,
+                        'name': 'subject1',
+                        'source':
+                        [
+                            {
+                                'abstract':
+                                [
+                                    {
+                                        "id": 1,
+                                        "name": "Material1",
+                                        "link": "https://material.ru/1",
+                                        "year_of_relevance": 2021,
+                                        "only_authorized_users": False
+                                    }
+                                ],
+                                'questions': [],
+                                'test': [],
+                                'other': []
+                            }
+                        ]
+                    },
+                    {
+                        'id_subject': 2,
+                        'name': 'subject2',
+                        'source':
+                            [
+                                {
+                                    'abstract':
+                                        [
+                                            {
+                                                "id": 2,
+                                                "name": "Material2",
+                                                "link": "https://material.ru/2",
+                                                "year_of_relevance": 2021,
+                                                "only_authorized_users": False
+                                            }
+                                        ],
+                                    'questions': [],
+                                    'test': [],
+                                    'other': []
+                                }
+                            ]
+                    }
+                ]
+            },
+            {
+                'id': 2,
+                'name': "Lecturer2",
+                "the_rest_of_materials": 0,
+                'materials': [
+                    {
+                        'id_subject': 2,
+                        'name': 'subject2',
+                        'source':
+                            [
+                                {
+                                    'abstract': [],
+                                    'questions': [],
+                                    'test': [],
+                                    'other': []
+                                }
+                            ]
+                    }
+                ]
+            },
+        ])
+
+    def test_get_lecturers_with_apmath_photo_vk(self):
+        c = Client()
+        r = c.get("/api/lecturers/?fields=apmath,photo,vk").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 0,
+                'apmath': "https://apmath.ru/1",
+                'vk_discuss_url': "https://vk.com/1",
+                'photo': "https://picsum.photos/200"
+            },
+            {
+                'id': 2,
+                'name': "Lecturer2",
+                "the_rest_of_materials": 0,
+                'apmath': "https://apmath.ru/2",
+                'vk_discuss_url': "https://vk.com/2",
+                'photo': "https://picsum.photos/200"
+            },
+        ])
+
+    def test_get_lecturers_by_id(self):
+        c = Client()
+        r = c.get("/api/lecturers/?id=1").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 0
+            }
+        ])
+
+    def test_get_lecturers_by_name(self):
+        c = Client()
+        r = c.get("/api/lecturers/?name=er2").json()
+        self.assertListEqual(r, [
+            {
+                'id': 2,
+                'name': "Lecturer2",
+                "the_rest_of_materials": 0
+            }
+        ])
+
+    def test_get_lecturers_by_subject(self):
+        c = Client()
+        r = c.get("/api/lecturers/?subject=1").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 0
+            }
+        ])
+
+    def test_get_lecturers_with_materials_by_subject(self):
+        """Материалы преподавателей по конкретному предмету"""
+        c = Client()
+        r = c.get("/api/lecturers/?id_subject_for_material=2&fields=materials").json()
+        self.assertListEqual(r, [
+            {
+                'id': 1,
+                'name': "Lecturer1",
+                "the_rest_of_materials": 1,
+                'materials':
+                    [
+                        {
+                            'id_subject': 2,
+                            'name': 'subject2',
+                            'source':
+                                [
+                                    {
+                                        'abstract':
+                                            [
+                                                {
+                                                    "id": 2,
+                                                    "name": "Material2",
+                                                    "link": "https://material.ru/2",
+                                                    "year_of_relevance": 2021,
+                                                    "only_authorized_users": False
+                                                }
+                                            ],
+                                        'questions': [],
+                                        'test': [],
+                                        'other': []
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                'id': 2,
+                'name': "Lecturer2",
+                "the_rest_of_materials": 0,
+                'materials': [
+                    {
+                        'id_subject': 2,
+                        'name': 'subject2',
+                        'source':
+                            [
+                                {
+                                    'abstract': [],
+                                    'questions': [],
+                                    'test': [],
+                                    'other': []
+                                }
+                            ]
+                    }
+                ]
+            },
+        ])
+
