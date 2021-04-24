@@ -1,5 +1,7 @@
 # База зананий ПМ-ПУ
 
+[![Django CI](https://github.com/PMPUlecture/PMPUlecture/actions/workflows/django.yml/badge.svg?branch=for_deploy&event=push)](https://github.com/PMPUlecture/PMPUlecture/actions/workflows/django.yml)
+
 Web-сервис для хранения учебных материалов и использование их другими студентами. 
 
 ![IMG](https://i.imgur.com/H0Xwh0E.png)
