@@ -209,6 +209,7 @@ class LecturerView(View):
         try:
             new_lecturer.clean_fields()
         except ValidationError as e:
+            Lecturer.objects.get(id=new_lecturer.id).delete()
             return {'status': 'error', 'error': e.message_dict}
 
         return {'status': 'ok'}

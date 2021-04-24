@@ -34,6 +34,7 @@ class SubjectTestCase(TestCase):
 
     def test_trying_create_incorrect_subject(self):
         c = Client()
+        print(len(Subject.objects.all()))
         c.login(email="r@r.com", password="password")
         r = c.post('/api/subjects/', data=json.dumps({'programme': 5, 'term': 1, 'name': 'subject1'}),
                    content_type="application/json").json()
@@ -48,3 +49,12 @@ class SubjectTestCase(TestCase):
         subjects = Subject.objects.filter(name='subject1').all()
         self.assertEqual(len(subjects), 0)
 
+class LecturerTestCase(TestCase):
+    def setUp(self) -> None:
+        programme = Programme.objects.create(name="programme", degree="bachelor")
+        Subject.objects.create(name='subject1', term=1, programme=programme)
+        Subject.objects.create(name='subject2', term=2, programme=programme)
+        User.objects.create_superuser("r@r.com", "password")
+
+    def test_create_leccturer(self):
+        c = Client()
